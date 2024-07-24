@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block content %}
+<h2>Вхід</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Увійти</button>
+</form>
+
+<hr>
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+    {% if provider.id == "google" %}
+    <a title="{{provider.name}}" class="btn btn-google"
+       href="{% provider_login_url provider.id process='login' %}">
+       Увійти через {{provider.name}}
+    </a>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}
