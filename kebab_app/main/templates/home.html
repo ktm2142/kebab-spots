@@ -1,70 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Головна - Kebab Spots{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+    </style>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-9">
-        <div id="map" style="height: 500px;"></div>
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Фільтр</h5>
-                <button class="btn btn-primary" id="filterToggle">Показати фільтр</button>
-                <div id="filterContent" style="display:none;">
-                    <!-- Тут будуть елементи фільтра -->
-                </div>
+    <div class="container mt-4">
+        <div class="row justify-content-center mb-3">
+            <div class="col-12 text-center">
+                <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary">Додати точку для шашлику</a>
+            </div>
+        </div>
+        <div class="row justify-content-left">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <div id="map"></div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script>
-    var map = L.map('map').setView([50.4501, 30.5234], 13);  // Початкові координати (Київ)
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Функція для оновлення позиції на карті
-    function updatePosition(lat, lng) {
-        map.setView([lat, lng], 13);
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup('Ви тут')
-            .openPopup();
-    }
-
-    // Перевірка підтримки геолокації
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            updatePosition(lat, lng);
-        }, function(error) {
-            console.error("Помилка отримання геолокації:", error.message);
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/map_utils.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = initMap('map');
+            initMapWithUserLocation(map, "{% url 'main:home' %}");
         });
-    } else {
-        console.log("Геолокація не підтримується цим браузером");
-    }
-
-    // Код для кнопки фільтра (як було раніше)
-    document.getElementById('filterToggle').addEventListener('click', function() {
-        var content = document.getElementById('filterContent');
-        if (content.style.display === 'none') {
-            content.style.display = 'block';
-            this.textContent = 'Сховати фільтр';
-        } else {
-            content.style.display = 'none';
-            this.textContent = 'Показати фільтр';
-        }
-    });
-</script>
+    </script>
 {% endblock %}

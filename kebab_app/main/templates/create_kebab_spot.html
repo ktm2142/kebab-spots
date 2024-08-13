@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Додати нову точку для шашлику - Kebab Spots{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Додати нову точку для шашлику</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="map"></div>
+            </div>
+            <div class="col-md-6">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/map_utils.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = initMap('map');
+            var marker;
+
+            initMapWithUserLocation(map, "{% url 'main:home' %}", function(map, lat, lng) {
+                // Функція callback, яка виконується після ініціалізації карти
+                map.on('click', function(e) {
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+                    marker = L.marker(e.latlng).addTo(map);
+                    document.getElementById('id_location').value = e.latlng.lng + ',' + e.latlng.lat;
+                });
+            });
+        });
+    </script>
+{% endblock %}

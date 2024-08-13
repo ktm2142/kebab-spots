@@ -1,33 +1,30 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
+from django.core.serializers import serialize
 from django.http import JsonResponse
-from django.shortcuts import render
-from django.views.generic import TemplateView, DetailView
-from rest_framework.response import Response
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, DetailView, CreateView
+from .forms import KebabSpotForm
+from .mixin import NearbyKebabSpotsMixin
+from .models import KebabSpot, KebabSpotPhoto
 
-from .models import KebabSpot
-from .serializers import KebabSpotSerializer
 
-
-class HomeView(TemplateView):
+class HomeView(NearbyKebabSpotsMixin, TemplateView):
     template_name = 'home.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
-    def get_nearby_spots(self, request):
-        lat = float(request.GET.get('lat', 0))
-        lon = float(request.GET.get('lon', 0))
-        radius = float(request.GET.get('radius', 10))
+class KebabSpotCreateView(LoginRequiredMixin, NearbyKebabSpotsMixin, CreateView):
+    model = KebabSpot
+    form_class = KebabSpotForm
+    template_name = 'create_kebab_spot.html'
+    success_url = reverse_lazy('main:home')
 
-        user_location = Point(lon, lat, srid=4326)
-        nearby_spots = KebabSpot.objects.filter(
-            location__distance_lte=(user_location, D(km=radius))
-        )
-
-        serializer = KebabSpotSerializer(nearby_spots, many=True)
-        return Response(serializer.data)
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 
 class KebabSpotDetailView(DetailView):
@@ -35,6 +32,5 @@ class KebabSpotDetailView(DetailView):
     template_name = 'kebab_spot_detail.html'
     context_object_name = 'spot'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
+
+

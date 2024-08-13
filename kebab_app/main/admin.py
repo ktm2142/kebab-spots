@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import KebabSpot, KebabSpotPhoto
+
+admin.site.register(KebabSpot)
+admin.site.register(KebabSpotPhoto)
