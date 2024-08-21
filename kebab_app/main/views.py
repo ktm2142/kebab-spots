@@ -1,15 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.gis.db.models.functions import Distance
-from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import D
-from django.core.serializers import serialize
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView
 from .forms import KebabSpotForm
 from .mixin import NearbyKebabSpotsMixin
-from .models import KebabSpot, KebabSpotPhoto
+from .models import KebabSpot, KebabSpotPhoto, Rating
 
 
 class HomeView(NearbyKebabSpotsMixin, TemplateView):
@@ -24,8 +18,19 @@ class KebabSpotCreateView(LoginRequiredMixin, NearbyKebabSpotsMixin, CreateView)
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        for file in self.request.FILES.getlist('photos'):
+            KebabSpotPhoto.objects.create(kebab_spot=self.object, image=file)
 
+        rating_value = form.cleaned_data.get('rating')
+        if rating_value:
+            Rating.objects.create(
+                user=self.request.user,
+                kebab_spot=self.object,
+                value=int(rating_value)
+            )
+
+        return response
 
 class KebabSpotDetailView(DetailView):
     model = KebabSpot

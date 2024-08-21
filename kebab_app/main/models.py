@@ -5,10 +5,10 @@ from django.db.models import Avg
 
 
 class KebabSpot(models.Model):
-    name = models.CharField(max_length=50, verbose_name="Назва")
-    location = models.PointField(verbose_name="Розташування")
-    description = models.TextField(verbose_name="Опис")
-    notes = models.TextField(verbose_name="Замітки", default=False, blank=True)
+    name = models.CharField(max_length=25, verbose_name="Назва", blank=False, null=False)
+    location = models.PointField(verbose_name="Розташування", null=False)
+    description = models.TextField(verbose_name="Опис", blank=False, null=False)
+    notes = models.TextField(verbose_name="Замітки", blank=True)
     payed_or_free = models.BooleanField(verbose_name="Платно чи безкоштовно", default=False)
     private_property = models.BooleanField(verbose_name="Приватна територія", default=False)
     parking = models.BooleanField(verbose_name="Парковка", default=False)
