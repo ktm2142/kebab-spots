@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Пошук - Kebab Spots{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center mb-3">
+            <div class="col-12 text-center">
+                <form action="{% url 'main:search' %}" method="get" class="form-inline justify-content-center mb-3">
+                    <input type="text" id="searchQuery" name="q" class="form-control mr-sm-2"
+                           placeholder="Введіть назву населеного пункту" value="{{ query }}">
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+                <a href="{% url 'main:home' %}" class="btn btn-secondary">На головну</a>
+                <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary ml-2">Додати точку для шашлику</a>
+            </div>
+        </div>
+        <div class="row justify-content-left">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var map = initMap('map');
+        var kebabSpots = {{ kebab_spots_json|safe }};
+        var searchCoordinates = {{ search_coordinates|default:"null"|safe }};
+
+        console.log('Kebab spots data:', kebabSpots);
+        addKebabSpots(map, kebabSpots, searchCoordinates);
+
+        function initMap(elementId, initialView = [50.4501, 30.5234], zoom = 6) {
+            var map = L.map(elementId).setView(initialView, zoom);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            return map;
+        }
+
+        function addKebabSpots(map, spots, searchCoordinates) {
+            spots.forEach(function (spot) {
+                if (spot.lat && spot.lng && !isNaN(spot.lat) && !isNaN(spot.lng)) {
+                    var latlng = [parseFloat(spot.lat), parseFloat(spot.lng)];
+                    var marker = L.marker(latlng).addTo(map);
+
+                    var tooltipContent = spot.name + '<br>Рейтинг: ' + (spot.avg_rating ? spot.avg_rating.toFixed(1) : 'Немає оцінок');
+                    marker.bindTooltip(tooltipContent, {
+                        permanent: false,
+                        direction: 'top',
+                        offset: L.point(-14, -13)
+                    });
+
+                    marker.on('click', function () {
+                        window.location.href = spot.url;
+                    });
+                } else {
+                    console.warn('Invalid coordinates for spot:', spot);
+                }
+            });
+
+            if (searchCoordinates) {
+                map.setView([searchCoordinates.lat, searchCoordinates.lng], 13);
+            }
+        }
+    });
+</script>
+
+{#    <script>#}
+{#        document.addEventListener('DOMContentLoaded', function () {#}
+{#            var map = initMap('map');#}
+{#            var kebabSpots = {{ kebab_spots_json|safe }};#}
+{#            console.log('Kebab spots data:', kebabSpots);#}
+{#            addKebabSpots(map, kebabSpots);#}
+{##}
+{#            function initMap(elementId, initialView = [0, 0], zoom = 2) {#}
+{#                var map = L.map(elementId).setView(initialView, zoom);#}
+{#                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {#}
+{#                    attribution: '© OpenStreetMap contributors'#}
+{#                }).addTo(map);#}
+{#                return map;#}
+{#            }#}
+{##}
+{#            function addKebabSpots(map, spots) {#}
+{#                spots.forEach(function (spot) {#}
+{#                    if (spot.lat && spot.lng && !isNaN(spot.lat) && !isNaN(spot.lng)) {#}
+{#                        var latlng = [parseFloat(spot.lat), parseFloat(spot.lng)];#}
+{#                        var marker = L.marker(latlng).addTo(map);#}
+{##}
+{#                        var tooltipContent = spot.name + '<br>Рейтинг: ' + (spot.avg_rating ? spot.avg_rating.toFixed(1) : 'Немає оцінок');#}
+{#                        marker.bindTooltip(tooltipContent, {#}
+{#                            permanent: false,#}
+{#                            direction: 'top',#}
+{#                            offset: L.point(-14, -13)#}
+{#                        });#}
+{##}
+{#                        marker.on('click', function () {#}
+{#                            window.location.href = spot.url;#}
+{#                        });#}
+{#                    } else {#}
+{#                        console.warn('Invalid coordinates for spot:', spot);#}
+{#                    }#}
+{#                });#}
+{##}
+{#                if (spots.length > 0) {#}
+{#                    var bounds = L.latLngBounds(spots.map(spot => [spot.lat, spot.lng]));#}
+{#                    map.fitBounds(bounds);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{#    </script>#}
+{% endblock %}

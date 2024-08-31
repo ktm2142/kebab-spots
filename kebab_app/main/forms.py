@@ -69,3 +69,6 @@ class KebabSpotForm(forms.ModelForm):
                 raise ValidationError('Файл занадто великий. Максимальний розмір: 10 MB.')
         return photos
 
+
+class SearchForm(forms.Form):
+    q = forms.CharField(label='Пошук', max_length=100, required=False)

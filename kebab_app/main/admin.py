@@ -9,7 +9,7 @@ class KebabSpotPhotoInline(admin.TabularInline):
 
 @admin.register(KebabSpot)
 class KebabSpotAdmin(LeafletGeoAdmin):
-    list_display = ('name', 'created_by')
+    list_display = ('id', 'name', 'created_by')
     readonly_fields = ('average_rating',)
     inlines = [KebabSpotPhotoInline]
 

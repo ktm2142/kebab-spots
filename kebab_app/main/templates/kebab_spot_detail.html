@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ spot.name }} - Kebab Spots{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <style>
+        #map {
+            height: 350px;
+            width: 60%;
+        }
+
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            font-size: 24px;
+            color: #ffd700;
+        }
+
+        .rating .star {
+            cursor: pointer;
+            color: #ddd;
+        }
+
+        .rating .star.active {
+            color: #ffd700;
+        }
+
+        #rating-message {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>{{ spot.name }}</h1>
+
+        <div id="map" class="mb-3"></div>
+
+        <p class="text-muted">
+            Створено: {{ spot.created_by.username }} | {{ spot.created_at|date:"d.m.Y" }}
+        </p>
+
+        <div class="mb-3">
+            {% for photo in spot.photos.all %}
+                <a href="{{ photo.image.url }}" target="_blank">
+                    <img src="{{ photo.image.url }}" alt="Фото точки" class="photo-preview">
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <h3>Рейтинг:</h3>
+            <div class="rating" id="rating">
+                {% for i in "12345" %}
+                    <span class="star" data-value="{{ i }}">★</span>
+                {% endfor %}
+            <p id="rating-message">Вашу оцінку враховано!</p>
+            </div>
+            <p>Середній рейтинг: <span id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Опис</h5>
+                <p class="card-text">{{ spot.description }}</p>
+            </div>
+        </div>
+
+        {% if spot.notes %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Замітки</h5>
+                    <p class="card-text">{{ spot.notes }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <h3>Характеристики:</h3>
+        <ul class="list-group mb-3">
+            <li class="list-group-item">Платно чи безкоштовно: {{ spot.payed_or_free|yesno:"Платно,Безкоштовно" }}</li>
+            <li class="list-group-item">Приватна територія: {{ spot.private_property|yesno:"Так,Ні" }}</li>
+            <li class="list-group-item">Парковка: {{ spot.parking|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Туалети: {{ spot.toilets|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Альтанки: {{ spot.gazebos|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Столи: {{ spot.tables|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Місце для кемпінгу: {{ spot.camping_places|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Місце для купання: {{ spot.swimming_spot|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Облаштоване місце для багаття: {{ spot.place_for_fire|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">Наявність смітників: {{ spot.trash_bins|yesno:"Є,Немає" }}</li>
+        </ul>
+
+        <a href="{% url 'main:home' %}" class="btn btn-primary mb-3">На головну</a>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ініціалізація карти
+            var map = L.map('map').setView([{{ spot.location.y }}, {{ spot.location.x }}], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([{{ spot.location.y }}, {{ spot.location.x }}]).addTo(map)
+                .bindPopup("{{ spot.name }}").openPopup();
+
+            // Функція для встановлення рейтингу
+            var ratingElement = document.getElementById('rating');
+            var averageRatingElement = document.getElementById('average-rating');
+            var ratingMessageElement = document.getElementById('rating-message');
+
+            if (!ratingElement || !averageRatingElement || !ratingMessageElement) {
+                console.error('Rating elements not found');
+                return;
+            }
+
+            function setRating(rating) {
+                var stars = document.querySelectorAll('.star');
+                stars.forEach(function (star, index) {
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
+            setRating({{ average_rating|default:0 }});
+
+            ratingElement.addEventListener('click', function (e) {
+                if (e.target.classList.contains('star')) {
+                    var rating = e.target.dataset.value;
+                    fetch('{% url "main:kebab_spot_detail" spot.pk %}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'rating=' + rating
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                setRating(data.avg_rating);
+                                averageRatingElement.textContent = data.avg_rating.toFixed(1);
+                                ratingMessageElement.style.display = 'block';
+                                setTimeout(() => {
+                                    ratingMessageElement.style.display = 'none';
+                                }, 3000);
+                            } else {
+                                console.error('Server returned error status');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                        });
+                }
+            });
+        });
+    </script>
+{% endblock %}

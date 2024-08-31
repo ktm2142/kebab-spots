@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
 
 
+
 class KebabSpot(models.Model):
     name = models.CharField(max_length=25, verbose_name="Назва", blank=False, null=False)
     location = models.PointField(verbose_name="Розташування", null=False)
@@ -25,7 +26,7 @@ class KebabSpot(models.Model):
 
     def __str__(self):
         return self.name
-
+    # @cached_property
     def average_rating(self):
         return self.ratings.aggregate(Avg('value'))['value__avg'] or 0
 

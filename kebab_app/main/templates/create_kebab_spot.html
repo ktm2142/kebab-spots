@@ -82,22 +82,6 @@
             </div>
         </div>
     </div>
-    {#    <div class="container mt-4">#}
-    {#        <h2>Додати нову точку для шашлику</h2>#}
-    {#        <div class="row">#}
-    {#            <div class="col-md-6">#}
-    {#                <div id="map"></div>#}
-    {#            </div>#}
-    {#            <div class="col-md-6">#}
-    {#                <form method="post" enctype="multipart/form-data">#}
-    {#                    {% csrf_token %}#}
-    {#                    {{ form|crispy }}#}
-    {#                    <div id="photo-preview" class="mt-2"></div>#}
-    {#                    <button type="submit" class="btn btn-primary mt-2">Зберегти</button>#}
-    {#                </form>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
 {% endblock %}
 
 {% block extra_js %}
@@ -113,36 +97,13 @@
             return map;
         }
 
-        // Додавання точок для шашлику на карту
-        function addKebabSpots(map, spots) {
-            spots.forEach(function (spot) {
-                var latlng = spot.fields.location.match(/-?\d+\.\d+/g);
-                L.marker([parseFloat(latlng[1]), parseFloat(latlng[0])])
-                    .addTo(map)
-                    .bindPopup(spot.fields.name);
-            });
-        }
-
-        // Отримання точок для шашлику з сервера
-        function fetchKebabSpots(url, lat, lng, callback) {
-            $.ajax({
-                url: `${url}?lat=${lat}&lng=${lng}`,
-                method: 'GET',
-                success: function (data) {
-                    var kebabSpots = JSON.parse(data);
-                    callback(kebabSpots);
-                }
-            });
-        }
-
-        function initMapWithUserLocation(map, url, callback) {
+        function initMapWithUserLocation(map, url) {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
                     map.setView([lat, lng], 13);
 
-                    // Створюємо червону іконку для маркера
                     var redIcon = new L.Icon({
                         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
                         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -152,15 +113,10 @@
                         shadowSize: [41, 41]
                     });
 
-                    // Додаємо червоний маркер "Ви тут"
                     L.marker([lat, lng], {icon: redIcon}).addTo(map)
                         .bindPopup('Ви тут')
                         .openPopup();
 
-                    fetchKebabSpots(url, lat, lng, function (spots) {
-                        addKebabSpots(map, spots);
-                        if (callback) callback(map, lat, lng);
-                    });
                 }, function (error) {
                     console.error("Geolocation error: ", error);
                 });
@@ -173,14 +129,16 @@
             var map = initMap('map');
             var marker;
 
-            initMapWithUserLocation(map, "{% url 'main:home' %}", function (map, lat, lng) {
-                map.on('click', function (e) {
-                    if (marker) {
-                        map.removeLayer(marker);
-                    }
-                    marker = L.marker(e.latlng).addTo(map);
-                    document.getElementById('id_location').value = e.latlng.lng + ',' + e.latlng.lat;
-                });
+            // Ініціалізація карти з місцезнаходженням користувача
+            initMapWithUserLocation(map, "{% url 'main:home' %}");
+
+            // Додаємо обробник кліків на карту
+            map.on('click', function (e) {
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                marker = L.marker(e.latlng).addTo(map);
+                document.getElementById('id_location').value = e.latlng.lng + ',' + e.latlng.lat;
             });
 
             var photoInput = document.getElementById('id_photos');
