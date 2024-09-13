@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}Пошук - Kebab Spots{% endblock %}
 
 {% block extra_css %}
@@ -7,6 +7,15 @@
     <style>
         #map {
             height: 400px;
+        }
+        .filter-form {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .filter-form .form-group {
+            margin-bottom: 10px;
         }
     </style>
 {% endblock %}
@@ -24,8 +33,26 @@
                 <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary ml-2">Додати точку для шашлику</a>
             </div>
         </div>
-        <div class="row justify-content-left">
-            <div class="col-lg-8 col-md-10 col-sm-12">
+
+        {% if error_message %}
+            <div class="row justify-content-center">
+                <div class="col-12 text-center">
+                    <div class="alert alert-warning">{{ error_message }}</div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <div class="filter-form">
+                    <h4>Фільтри</h4>
+                    <form method="get" action="{% url 'main:search' %}">
+                        <input type="hidden" name="q" value="{{ query }}">
+                        {% crispy filter_form %}
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12">
                 <div id="map"></div>
             </div>
         </div>
@@ -38,7 +65,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         var map = initMap('map');
-        var kebabSpots = {{ kebab_spots_json|safe }};
+        var kebabSpots = {{ kebab_spots_json|default:"[]"|safe }};
         var searchCoordinates = {{ search_coordinates|default:"null"|safe }};
 
         console.log('Kebab spots data:', kebabSpots);
@@ -75,52 +102,11 @@
 
             if (searchCoordinates) {
                 map.setView([searchCoordinates.lat, searchCoordinates.lng], 13);
+            } else if (spots.length > 0) {
+                var bounds = L.latLngBounds(spots.map(spot => [spot.lat, spot.lng]));
+                map.fitBounds(bounds);
             }
         }
     });
-</script>
-
-{#    <script>#}
-{#        document.addEventListener('DOMContentLoaded', function () {#}
-{#            var map = initMap('map');#}
-{#            var kebabSpots = {{ kebab_spots_json|safe }};#}
-{#            console.log('Kebab spots data:', kebabSpots);#}
-{#            addKebabSpots(map, kebabSpots);#}
-{##}
-{#            function initMap(elementId, initialView = [0, 0], zoom = 2) {#}
-{#                var map = L.map(elementId).setView(initialView, zoom);#}
-{#                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {#}
-{#                    attribution: '© OpenStreetMap contributors'#}
-{#                }).addTo(map);#}
-{#                return map;#}
-{#            }#}
-{##}
-{#            function addKebabSpots(map, spots) {#}
-{#                spots.forEach(function (spot) {#}
-{#                    if (spot.lat && spot.lng && !isNaN(spot.lat) && !isNaN(spot.lng)) {#}
-{#                        var latlng = [parseFloat(spot.lat), parseFloat(spot.lng)];#}
-{#                        var marker = L.marker(latlng).addTo(map);#}
-{##}
-{#                        var tooltipContent = spot.name + '<br>Рейтинг: ' + (spot.avg_rating ? spot.avg_rating.toFixed(1) : 'Немає оцінок');#}
-{#                        marker.bindTooltip(tooltipContent, {#}
-{#                            permanent: false,#}
-{#                            direction: 'top',#}
-{#                            offset: L.point(-14, -13)#}
-{#                        });#}
-{##}
-{#                        marker.on('click', function () {#}
-{#                            window.location.href = spot.url;#}
-{#                        });#}
-{#                    } else {#}
-{#                        console.warn('Invalid coordinates for spot:', spot);#}
-{#                    }#}
-{#                });#}
-{##}
-{#                if (spots.length > 0) {#}
-{#                    var bounds = L.latLngBounds(spots.map(spot => [spot.lat, spot.lng]));#}
-{#                    map.fitBounds(bounds);#}
-{#                }#}
-{#            }#}
-{#        });#}
-{#    </script>#}
+    </script>
 {% endblock %}

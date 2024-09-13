@@ -11,6 +11,7 @@ crispy-bootstrap5==2024.2
 cryptography==42.0.8
 Django==5.0.7
 django-allauth==0.63.6
+django-bootstrap5==24.2
 django-crispy-forms==2.3
 django-debug-toolbar==4.4.6
 django-leaflet==0.30.1

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ spot.name }} - Kebab Spots{% endblock %}
 
@@ -38,6 +40,54 @@
             color: green;
             margin-top: 10px;
         }
+
+        .photo-preview-container {
+            display: inline-block;
+            position: relative;
+            margin: 5px;
+        }
+
+        .photo-preview {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+        }
+
+        .photo-delete {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .comment-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .comment-photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .vote-btn {
+            transition: background-color 0.3s ease;
+        }
+
+        .vote-btn.voted {
+            background-color: #28a745;
+            color: white;
+        }
     </style>
 {% endblock %}
 
@@ -65,7 +115,7 @@
                 {% for i in "12345" %}
                     <span class="star" data-value="{{ i }}">★</span>
                 {% endfor %}
-            <p id="rating-message">Вашу оцінку враховано!</p>
+                <p id="rating-message">Вашу оцінку враховано!</p>
             </div>
             <p>Середній рейтинг: <span id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
         </div>
@@ -101,6 +151,64 @@
         </ul>
 
         <a href="{% url 'main:home' %}" class="btn btn-primary mb-3">На головну</a>
+
+        <h3>Коментарі</h3>
+
+        {% if comments %}
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment" id="comment-{{ comment.id }}">
+                        <p>{{ comment.user.username }} - {{ comment.created_at|date:"d.m.Y H:i" }}</p>
+                        <p>{{ comment.text }}</p>
+                        <div class="comment-rating">
+                            {% if user.is_authenticated %}
+                                <button class="vote-btn upvote" data-comment-id="{{ comment.id }}" data-vote-type="up">
+                                    👍 <span class="upvotes-count">{{ comment.upvotes }}</span>
+                                </button>
+                                <button class="vote-btn downvote" data-comment-id="{{ comment.id }}"
+                                        data-vote-type="down">
+                                    👎 <span class="downvotes-count">{{ comment.downvotes }}</span>
+                                </button>
+                            {% else %}
+                                <button class="vote-btn upvote"
+                                        onclick="location.href='{% url 'account_login' %}?next={{ request.path }}'">
+                                    👍 <span class="upvotes-count">{{ comment.upvotes }}</span>
+                                </button>
+                                <button class="vote-btn downvote"
+                                        onclick="location.href='{% url 'account_login' %}?next={{ request.path }}'">
+                                    👎 <span class="downvotes-count">{{ comment.downvotes }}</span>
+                                </button>
+                            {% endif %}
+                        </div>
+
+
+                        <div class="comment-photos">
+                            {% for photo in comment.comment_photos.all %}
+                                <a href="{{ photo.image.url }}" target="_blank">
+                                    <img src="{{ photo.image.url }}" alt="Фото коментаря" class="photo-preview">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% bootstrap_pagination comments %}
+        {% else %}
+            <p>Немає коментарів.</p>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div id="photo-preview" class="mt-2"></div>
+                <button type="submit" class="btn btn-primary">Залишити коментар</button>
+            </form>
+        {% else %}
+            <p>Щоб залишити коментар, увійдіть у систему.</p>
+        {% endif %}
+
     </div>
 {% endblock %}
 
@@ -169,6 +277,108 @@
                             console.error('Fetch error:', error);
                         });
                 }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            var photoInput = document.getElementById('id_photos');
+            var photoPreview = document.getElementById('photo-preview');
+            var selectedFiles = new DataTransfer();
+
+            function handleFileSelect(event) {
+                var files = event.target.files;
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.type.startsWith('image/')) {
+                        selectedFiles.items.add(file);
+                        createPreview(file);
+                    } else {
+                        alert('Файл ' + file.name + ' не є зображенням. Будь ласка, вибирайте тільки фотографії.');
+                    }
+                }
+                photoInput.files = selectedFiles.files;
+            }
+
+            function createPreview(file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var container = document.createElement('div');
+                    container.className = 'photo-preview-container';
+
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.title = file.name;
+                    img.className = 'photo-preview';
+                    container.appendChild(img);
+
+                    var deleteButton = document.createElement('div');
+                    deleteButton.className = 'photo-delete';
+                    deleteButton.innerHTML = '×';
+                    deleteButton.onclick = function (event) {
+                        event.stopPropagation();
+                        removeFile(file);
+                        photoPreview.removeChild(container);
+                    };
+                    container.appendChild(deleteButton);
+
+                    photoPreview.appendChild(container);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function removeFile(file) {
+                var newFiles = new DataTransfer();
+                for (var i = 0; i < selectedFiles.files.length; i++) {
+                    var f = selectedFiles.files[i];
+                    if (f !== file) {
+                        newFiles.items.add(f);
+                    }
+                }
+                selectedFiles = newFiles;
+                photoInput.files = selectedFiles.files;
+            }
+
+            photoInput.addEventListener('change', handleFileSelect, false);
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            document.querySelectorAll('.vote-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.dataset.commentId;
+                    const voteType = this.dataset.voteType;
+                    const commentElement = document.getElementById(`comment-${commentId}`);
+
+                    fetch('{% url "main:kebab_spot_detail" spot.pk %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': csrftoken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: `comment_id=${commentId}&vote_type=${voteType}`
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success') {
+                                commentElement.querySelector('.upvotes-count').textContent = data.upvotes;
+                                commentElement.querySelector('.downvotes-count').textContent = data.downvotes;
+                                // Додайте візуальний фідбек, наприклад, зміна кольору кнопки
+                                this.classList.add('voted');
+                                setTimeout(() => this.classList.remove('voted'), 1000);
+                            } else {
+                                throw new Error(data.message || 'An error occurred');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Виникла помилка при голосуванні. Будь ласка, спробуйте ще раз.');
+                        });
+                });
             });
         });
     </script>

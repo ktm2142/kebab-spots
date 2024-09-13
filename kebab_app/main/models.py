@@ -10,7 +10,7 @@ class KebabSpot(models.Model):
     location = models.PointField(verbose_name="Розташування", null=False)
     description = models.TextField(verbose_name="Опис", blank=False, null=False)
     notes = models.TextField(verbose_name="Замітки", blank=True)
-    payed_or_free = models.BooleanField(verbose_name="Платно чи безкоштовно", default=False)
+    payed_or_free = models.BooleanField(verbose_name="Платно", default=False)
     private_property = models.BooleanField(verbose_name="Приватна територія", default=False)
     parking = models.BooleanField(verbose_name="Парковка", default=False)
     toilets = models.BooleanField(verbose_name="Туалети", default=False)
@@ -26,7 +26,7 @@ class KebabSpot(models.Model):
 
     def __str__(self):
         return self.name
-    # @cached_property
+
     def average_rating(self):
         return self.ratings.aggregate(Avg('value'))['value__avg'] or 0
 
@@ -53,3 +53,27 @@ class KebabSpotPhoto(models.Model):
     kebab_spot = models.ForeignKey(KebabSpot, on_delete=models.CASCADE, related_name='photos')
     image = models.ImageField(upload_to='kebab_spots/', blank=True)
 
+
+class Comment(models.Model):
+    kebab_spot = models.ForeignKey(KebabSpot, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class CommentRating(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_ratings')
+    is_positive = models.BooleanField(null=True)
+
+    class Meta:
+        unique_together = ('comment', 'user')
+
+
+class CommentPhoto(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_photos')
+    image = models.ImageField(upload_to='comment_photos/')
