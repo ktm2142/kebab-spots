@@ -151,6 +151,9 @@
         </ul>
 
         <a href="{% url 'main:home' %}" class="btn btn-primary mb-3">На головну</a>
+        {% if user.is_authenticated and user != spot.created_by %}
+            <a href="{% url 'main:submit_complaint' spot.pk %}" class="btn btn-warning mt-3">Подати скаргу</a>
+        {% endif %}
 
         <h3>Коментарі</h3>
 
@@ -190,6 +193,13 @@
                             {% endfor %}
                         </div>
                     </div>
+                    {% if user == comment.user or user.is_staff %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
+                            <button type="submit" class="btn btn-danger">Видалити</button>
+                        </form>
+                    {% endif %}
                 {% endfor %}
             </div>
 

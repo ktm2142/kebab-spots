@@ -1,16 +1,18 @@
+from django.contrib import messages
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.paginator import Paginator
+from django.db import IntegrityError
 from django.db.models import Prefetch, Count, Q, Avg
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError, GeocoderUnavailable, GeocoderQueryError, GeocoderQuotaExceeded
 from django.core.cache import cache
 from .forms import CommentForm, KebabSpotFilterForm
-from .models import Comment, CommentRating, Rating, KebabSpot
+from .models import Comment, CommentRating, Rating, KebabSpot, Complaint
 import logging
 
 logger = logging.getLogger(__name__)
@@ -128,7 +130,7 @@ class FilteringService:
         queryset = KebabSpot.objects.annotate(
             distance=Distance('location', user_location),
             avg_rating=Avg('ratings__value')
-        ).filter(distance__lte=D(km=radius))
+        ).filter(distance__lte=D(km=radius), hidden=False)
 
         if filter_params:
             for key, value in filter_params.items():
@@ -169,13 +171,36 @@ class CommentService:
         return False, comment_form
 
     @staticmethod
+    def delete_comment_request(request):
+        comment_id = request.POST.get('delete_comment_id')
+        if comment_id:
+            try:
+                comment = Comment.objects.get(pk=comment_id)
+                if comment.user == request.user or request.user.is_superuser:  # Перевірка прав доступу
+                    comment.delete()
+                    return True
+                return False
+            except Comment.DoesNotExist:
+                return False
+        return False
+
+    @staticmethod
     def vote_comment(user, comment, vote_type):
         is_positive = (vote_type == 'up')
-        CommentRating.objects.update_or_create(
-            comment=comment,
+
+        rating, created = CommentRating.objects.get_or_create(
             user=user,
+            comment=comment,
             defaults={'is_positive': is_positive}
         )
+
+        if not created:
+            if rating.is_positive == is_positive:
+                rating.delete()
+            else:
+                rating.is_positive = is_positive
+                rating.save()
+
         upvotes = CommentRating.objects.filter(comment=comment, is_positive=True).count()
         downvotes = CommentRating.objects.filter(comment=comment, is_positive=False).count()
         return {'upvotes': upvotes, 'downvotes': downvotes}
@@ -236,4 +261,6 @@ class KebabSpotRatingService:
                 )
             )
         return JsonResponse({'status': 'error', 'message': 'Invalid rating value'}, status=400)
+
+
 

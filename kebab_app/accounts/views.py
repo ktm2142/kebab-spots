@@ -1,5 +1,7 @@
 from django.conf import settings
-from django.views.generic import CreateView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Avg
+from django.views.generic import CreateView, TemplateView, ListView
 from django.contrib.auth import login
 from django.contrib.auth.views import LogoutView, LoginView
 from django.shortcuts import render, get_object_or_404
@@ -7,12 +9,12 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from .forms import RegistrationForm
 from .models import ActivationToken
+from main.models import KebabSpot
 
 
 class RegisterView(CreateView):
     form_class = RegistrationForm
     success_url = reverse_lazy('home')
-    # template_name_suffix = '_create'
     template_name = 'accounts/user_create.html'
 
     def form_valid(self, form):
@@ -68,3 +70,16 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     next_page = settings.LOGOUT_REDIRECT_URL
+
+
+class UserProfileView(LoginRequiredMixin, ListView):
+    template_name = 'accounts/user_profile.html'
+    context_object_name = 'kebab_spots'
+    queryset = (KebabSpot.objects
+                .select_related('created_by')
+                .annotate(
+                    comments_count=Count('comments'),
+                    avg_rating=Avg('ratings__value'))
+                .order_by('-created_at')
+                )
+

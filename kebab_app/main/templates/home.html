@@ -4,17 +4,19 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css"/>
     <style>
         #map {
             height: 400px;
         }
+
         .filter-form {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
+
         .filter-form .form-group {
             margin-bottom: 10px;
         }
@@ -33,7 +35,15 @@
                 <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary">Додати точку для шашлику</a>
             </div>
         </div>
-
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg-4 col-md-12">
                 <div class="filter-form">
@@ -53,7 +63,8 @@
 {% block extra_js %}
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
+            charset="utf-8"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var map = initMap('map');

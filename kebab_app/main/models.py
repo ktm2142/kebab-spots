@@ -23,6 +23,8 @@ class KebabSpot(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_by", verbose_name="Створено користувачем")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Створено")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Оновлено")
+    hidden = models.BooleanField(default=False, verbose_name="Приховано")
+    complaints_count = models.PositiveIntegerField(default=0, verbose_name="Кількість скарг")
 
     def __str__(self):
         return self.name
@@ -33,6 +35,7 @@ class KebabSpot(models.Model):
     def star_rating(self):
         avg = self.average_rating()
         return round(avg * 2) / 2
+
 
     class Meta:
         verbose_name = "Місце для шашлику"
@@ -77,3 +80,18 @@ class CommentRating(models.Model):
 class CommentPhoto(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_photos')
     image = models.ImageField(upload_to='comment_photos/')
+
+
+class Complaint(models.Model):
+    kebab_spot = models.ForeignKey(KebabSpot, on_delete=models.CASCADE, related_name='complaints')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(verbose_name="Текст скарги")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Скарга"
+        verbose_name_plural = "Скарги"
+        unique_together = ('kebab_spot', 'user')
+
+    def __str__(self):
+        return f"Скарга на {self.kebab_spot.name} від {self.user.username}"

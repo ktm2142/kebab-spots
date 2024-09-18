@@ -17,21 +17,25 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="#">Рецепти</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Форум</a></li>
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <form method="POST" action="{% url 'accounts:logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link">Вихід</button>
-                    </form>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:user_profile' %}">Особистий кабінет</a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{% url 'accounts:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link">Вихід</button>
+                        </form>
+                    </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link btn btn-link" href="{% url 'accounts:login' %}" tabindex="-1" aria-disabled="true">Вхід</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-link" href="{% url 'accounts:register' %}" tabindex="-1" aria-disabled="true">Реєстрація</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-link" href="{% url 'accounts:login' %}" tabindex="-1"
+                           aria-disabled="true">Вхід</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-link" href="{% url 'accounts:register' %}" tabindex="-1"
+                           aria-disabled="true">Реєстрація</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>

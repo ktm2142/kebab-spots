@@ -3,7 +3,7 @@ from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field, HTML, Row, Column
-from .models import KebabSpot, Rating, KebabSpotPhoto, Comment, CommentPhoto
+from .models import KebabSpot, Rating, KebabSpotPhoto, Comment, CommentPhoto, Complaint
 
 
 class KebabSpotForm(forms.ModelForm):
@@ -172,3 +172,15 @@ class CommentForm(forms.ModelForm):
             for photo in self.files.getlist('photos'):
                 CommentPhoto.objects.create(comment=comment, image=photo)
         return comment
+
+
+class ComplaintForm(forms.ModelForm):
+    class Meta:
+        model = Complaint
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 4, 'cols': 50})
+        }
+        labels = {
+            'text': 'Причина скарги'
+        }

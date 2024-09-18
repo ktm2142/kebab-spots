@@ -2,6 +2,7 @@ from django.urls import path, include
 
 from . import views
 
+
 app_name = 'accounts'
 
 urlpatterns = [
@@ -10,6 +11,7 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     path('activation-sent/', views.ActivationSentView.as_view(), name='activation_sent'),
     path('activate/<str:token>/', views.ActivateView.as_view(), name='activate'),
+    path('profile/', views.UserProfileView.as_view(), name='user_profile'),
 
     path('', include('allauth.urls')),
 
