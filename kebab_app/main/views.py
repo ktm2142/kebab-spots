@@ -1,8 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-from django.db import transaction, IntegrityError
 from django.db.models import Avg, Prefetch, Count, Q
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,9 +10,9 @@ from django.views import View
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, CreateView
 from .forms import KebabSpotForm, KebabSpotFilterForm, CommentForm, ComplaintForm
-
 from .models import KebabSpot, KebabSpotPhoto, Rating, Comment, CommentPhoto, CommentRating, Complaint
-from .services import KebabSpotRatingService, CommentService, NearbyKebabSpotsService, SearchKebabSpotsService
+from .services import KebabSpotRatingService, CommentService, NearbyKebabSpotsService, SearchKebabSpotsService, \
+    ComplaintService
 
 
 class HomeView(NearbyKebabSpotsService, TemplateView):
@@ -75,32 +73,10 @@ class KebabComplaintView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         kebab_spot_id = self.kwargs['pk']
-        kebab_spot = get_object_or_404(KebabSpot, pk=kebab_spot_id)
+        success, error_message = ComplaintService.submit_complaint(self.request, kebab_spot_id, form)
 
-        try:
-            with transaction.atomic():
-                complaint = form.save(commit=False)
-                complaint.kebab_spot = kebab_spot
-                complaint.user = self.request.user
-                complaint.save()
-
-                # Збільшуємо кількість скарг
-                kebab_spot.complaints_count += 1
-
-                # Перевіряємо, чи потрібно приховати точку
-                if kebab_spot.complaints_count >= 5:
-                    kebab_spot.hidden = True
-
-                kebab_spot.save()
-
-                if kebab_spot.hidden:
-                    messages.warning(self.request,
-                                     'Точку відправлено на розгляд та приховано через велику кількість скарг.')
-                else:
-                    messages.success(self.request, 'Вашу скаргу було подано.')
-
-        except IntegrityError:
-            messages.error(self.request, 'Ви вже подавали скаргу на цю точку.')
+        if success:
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, error_message)
             return self.form_invalid(form)
-
-        return super().form_valid(form)

@@ -51,13 +51,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'debug_toolbar',
-    'rest_framework',
     'crispy_forms',
     'crispy_bootstrap5',
     'django_bootstrap5',
     'leaflet',
+
     'main',
     'accounts',
+    'recipes',
+
 ]
 
 MIDDLEWARE = [
