@@ -3,7 +3,7 @@ from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.paginator import Paginator
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import Prefetch, Count, Q, Avg
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -12,6 +12,7 @@ from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError, GeocoderUnavailable, GeocoderQueryError, GeocoderQuotaExceeded
 from django.core.cache import cache
 from .forms import CommentForm, KebabSpotFilterForm
+from .mixins import RatingMixin
 from .models import Comment, CommentRating, Rating, KebabSpot, Complaint
 import logging
 
@@ -225,42 +226,45 @@ class CommentService:
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
-class KebabSpotRatingService:
-    @staticmethod
-    def update_or_create_rating(user, kebab_spot, rating_value):
-        rating, created = Rating.objects.update_or_create(
-            user=user,
-            kebab_spot=kebab_spot,
-            defaults={'value': int(rating_value)}
-        )
-        return {
-            'status': 'success',
-            'avg_rating': kebab_spot.average_rating()
-        }
+class KebabSpotRatingService(RatingMixin):
+    def __init__(self):
+        super().__init__(Rating, 'kebab_spot')
 
     @staticmethod
     def handle_post_request(view_instance, request, spot):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             # Обробляємо ajax-запит і делегуємо відповідній логіці
             if 'rating' in request.POST:
-                return KebabSpotRatingService.handle_rating_update(request, spot)
+                return KebabSpotRatingService().handle_rating_update(request, spot)
             else:
                 return CommentService.handle_comment_vote(request, spot)
         # Якщо це не ajax-запит, то це коментар
         return view_instance.handle_comment_form(request, spot)
 
+
+class ComplaintService:
     @staticmethod
-    def handle_rating_update(request, kebab_spot):
-        rating_value = request.POST.get('rating')
-        if rating_value:
-            return JsonResponse(
-                KebabSpotRatingService.update_or_create_rating(
-                    request.user,
-                    kebab_spot,
-                    rating_value
-                )
-            )
-        return JsonResponse({'status': 'error', 'message': 'Invalid rating value'}, status=400)
+    def submit_complaint(request, kebab_spot_id, form):
+        kebab_spot = get_object_or_404(KebabSpot, pk=kebab_spot_id)
 
+        try:
+            with transaction.atomic():
+                complaint = form.save(commit=False)
+                complaint.kebab_spot = kebab_spot
+                complaint.user = request.user
+                complaint.save()
 
+                kebab_spot.complaints_count += 1
+                if kebab_spot.complaints_count >= 5:
+                    kebab_spot.hidden = True
+                kebab_spot.save()
 
+                if kebab_spot.hidden:
+                    messages.warning(request, 'Точку відправлено на розгляд та приховано через велику кількість скарг.')
+                else:
+                    messages.success(request, 'Вашу скаргу було подано.')
+
+                return True, None
+
+        except IntegrityError:
+            return False, 'Ви вже подавали скаргу на цю точку.'

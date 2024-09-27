@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Додати новий рецепт - Recipes{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .photo-preview-container {
+            display: inline-block;
+            position: relative;
+            margin: 5px;
+        }
+
+        .photo-preview {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+        }
+
+        .photo-delete {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Додати новий рецепт</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form|crispy }}
+                </div>
+                <div class="col-md-6">
+                    <h3>Фотографії</h3>
+{#                    <input type="file" id="id_photos" name="photos" multiple class="form-control">#}
+                    <div id="photo-preview" class="mt-2"></div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Зберегти рецепт</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var photoInput = document.getElementById('id_photos');
+            var photoPreview = document.getElementById('photo-preview');
+            var selectedFiles = new DataTransfer();
+
+            function handleFileSelect(event) {
+                var files = event.target.files;
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.type.startsWith('image/')) {
+                        selectedFiles.items.add(file);
+                        createPreview(file);
+                    } else {
+                        alert('Файл ' + file.name + ' не є зображенням. Будь ласка, вибирайте тільки фотографії.');
+                    }
+                }
+                photoInput.files = selectedFiles.files;
+            }
+
+            function createPreview(file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var container = document.createElement('div');
+                    container.className = 'photo-preview-container';
+
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.title = file.name;
+                    img.className = 'photo-preview';
+                    container.appendChild(img);
+
+                    var deleteButton = document.createElement('div');
+                    deleteButton.className = 'photo-delete';
+                    deleteButton.innerHTML = '×';
+                    deleteButton.onclick = function (event) {
+                        event.stopPropagation();
+                        removeFile(file);
+                        photoPreview.removeChild(container);
+                    };
+                    container.appendChild(deleteButton);
+
+                    photoPreview.appendChild(container);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function removeFile(file) {
+                var newFiles = new DataTransfer();
+                for (var i = 0; i < selectedFiles.files.length; i++) {
+                    var f = selectedFiles.files[i];
+                    if (f !== file) {
+                        newFiles.items.add(f);
+                    }
+                }
+                selectedFiles = newFiles;
+                photoInput.files = selectedFiles.files;
+            }
+
+            photoInput.addEventListener('change', handleFileSelect, false);
+        });
+    </script>
+{% endblock %}

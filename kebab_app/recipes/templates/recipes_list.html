@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+            <div class="mb-3">
+                    <a href="{% url 'recipes:create_recipe' %}" class="btn btn-success">Додати рецепт</a>
+                </div>
+
+                <form action="{% url 'recipes:recipe_search' %}" method="get" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Пошук рецептів"
+                               value="{{ request.GET.q|default:'' }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Шукати</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Список рецептів -->
+                {% if recipes %}
+                    <div class="list-group">
+                        {% for recipe in recipes %}
+                            <a href="{% url 'recipes:recipe_detail' recipe.id %}"
+                               class="list-group-item list-group-item-action text-decoration-none">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ recipe.title }}</h5>
+                                    <small>{{ recipe.created_at|date:"d.m.Y" }}</small>
+                                </div>
+                                <small>Автор: {{ recipe.author.username }}</small>
+
+                                <!-- Середній рейтинг рецепту -->
+                                <p class="mt-2">Середній рейтинг:
+                                    <strong>{{ recipe.avg_rating|default:0|floatformat:1 }}</strong>
+                                </p>
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Пагінація (якщо потрібно) -->
+                    <div class="mt-4">
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                {% if recipes.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ recipes.previous_page_number }}">Попередня</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Сторінка {{ recipes.number }} з {{ recipes.paginator.num_pages }}</span>
+                                </li>
+                                {% if recipes.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ recipes.next_page_number }}">Наступна</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+
+                {% else %}
+                    <p>Немає рецептів для відображення.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

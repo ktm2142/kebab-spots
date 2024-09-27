@@ -1,0 +1,16 @@
+************ : log created on : Wednesday July 31 2024 @ 15:58:17
+00:00:00.000 : [sys] running on x86_64 / Windows 10 x64 (version 10.0.19045)
+00:00:00.000 : [sys] Command line:  D:\Dreams\American Truck Simulator\bin\win_x64\amtrucks.exe
+00:00:00.000 : [cpu] CPU0: GenuineIntel [Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz] with 6 cores (12 threads) at ~2592MHz.
+00:00:00.000 : [sys] using 4 worker thread(s)
+00:00:00.000 : [sys] and 3 worker threads for IO.
+00:00:00.000 : [sys] plus 3 real-time worker threads.
+00:00:00.000 : [sys] using QPC / HPET timer, frequency 10000000Hz
+00:00:00.000 : [mem] physical total: 16204M
+00:00:00.000 : [mem] physical avail: 10917M
+00:00:00.000 : [mem] virtual total: 134217727M
+00:00:00.000 : [mem] virtual avail: 134212791M
+00:00:00.000 : [mem] Trying to allocate memory pool (6291456K)
+00:00:00.000 : [mem] Allocated 128 MBs for temporary loading buffers
+00:00:00.020 : [xinput] Using XInput version 1.4.0
+00:00:00.055 : <ERROR> [ufs] Failed to determine application directory!

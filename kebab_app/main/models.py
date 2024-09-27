@@ -4,7 +4,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
 
 
-
 class KebabSpot(models.Model):
     name = models.CharField(max_length=25, verbose_name="Назва", blank=False, null=False)
     location = models.PointField(verbose_name="Розташування", null=False)
