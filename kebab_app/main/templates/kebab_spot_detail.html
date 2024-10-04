@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load django_bootstrap5 %}
+{% load i18n %}
 
 {% block title %}{{ spot.name }} - Kebab Spots{% endblock %}
 
@@ -9,16 +10,18 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
     <style>
         #map {
-            height: 350px;
+            height: 450px;
             width: 60%;
         }
 
         .photo-preview {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: auto;
+            max-width: 100px;
+            max-height: 100px;
             object-fit: cover;
-            margin-right: 10px;
-            margin-bottom: 10px;
+            margin-right: 5px;
+            margin-bottom: 5px;
         }
 
         .rating {
@@ -47,12 +50,6 @@
             margin: 5px;
         }
 
-        .photo-preview {
-            max-width: 100px;
-            max-height: 100px;
-            cursor: pointer;
-        }
-
         .photo-delete {
             position: absolute;
             top: -10px;
@@ -68,9 +65,33 @@
             z-index: 10;
         }
 
-        .comment-box {
+        .comment {
             background-color: #f8f9fa;
             border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        .comment-date {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .comment-content {
+            margin-bottom: 10px;
         }
 
         .comment-photos {
@@ -80,13 +101,69 @@
             margin-top: 10px;
         }
 
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         .vote-btn {
             transition: background-color 0.3s ease;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
         .vote-btn.voted {
             background-color: #28a745;
             color: white;
+        }
+
+        .delete-comment {
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 350px;
+                width: 100%;
+            }
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .rating {
+                font-size: 20px;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .comment {
+                padding: 10px;
+            }
+
+            .comment-photos img {
+                max-width: 60px;
+                max-height: 60px;
+            }
+
+            form .form-group {
+                margin-bottom: 10px;
+            }
+
+            form textarea {
+                height: 100px;
+            }
         }
     </style>
 {% endblock %}
@@ -98,31 +175,32 @@
         <div id="map" class="mb-3"></div>
 
         <p class="text-muted">
-            Створено: {{ spot.created_by.username }} | {{ spot.created_at|date:"d.m.Y" }}
+            {% trans "Created by" %}: {{ spot.created_by.username }} | {{ spot.created_at|date:"SHORT_DATE_FORMAT" }}
         </p>
 
         <div class="mb-3">
             {% for photo in spot.photos.all %}
                 <a href="{{ photo.image.url }}" target="_blank">
-                    <img src="{{ photo.image.url }}" alt="Фото точки" class="photo-preview">
+                    <img src="{{ photo.image.url }}" alt="{% trans 'Spot photo' %}" class="photo-preview">
                 </a>
             {% endfor %}
         </div>
 
         <div class="mb-3">
-            <h3>Рейтинг:</h3>
+            <h3>{% trans "Rating" %}:</h3>
             <div class="rating" id="rating">
                 {% for i in "12345" %}
                     <span class="star" data-value="{{ i }}">★</span>
                 {% endfor %}
-                <p id="rating-message">Вашу оцінку враховано!</p>
+                <p id="rating-message">{% trans "Your rating has been recorded!" %}</p>
             </div>
-            <p>Середній рейтинг: <span id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
+            <p>{% trans "Average rating" %}: <span
+                    id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
         </div>
 
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">Опис</h5>
+                <h5 class="card-title">{% trans "Description" %}</h5>
                 <p class="card-text">{{ spot.description }}</p>
             </div>
         </div>
@@ -130,45 +208,60 @@
         {% if spot.notes %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Замітки</h5>
+                    <h5 class="card-title">{% trans "Notes" %}</h5>
                     <p class="card-text">{{ spot.notes }}</p>
                 </div>
             </div>
         {% endif %}
 
-        <h3>Характеристики:</h3>
+        <h3>{% trans "Characteristics" %}:</h3>
         <ul class="list-group mb-3">
-            <li class="list-group-item">Платно чи безкоштовно: {{ spot.payed_or_free|yesno:"Платно,Безкоштовно" }}</li>
-            <li class="list-group-item">Приватна територія: {{ spot.private_property|yesno:"Так,Ні" }}</li>
-            <li class="list-group-item">Парковка: {{ spot.parking|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Туалети: {{ spot.toilets|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Альтанки: {{ spot.gazebos|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Столи: {{ spot.tables|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Місце для кемпінгу: {{ spot.camping_places|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Місце для купання: {{ spot.swimming_spot|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Облаштоване місце для багаття: {{ spot.place_for_fire|yesno:"Є,Немає" }}</li>
-            <li class="list-group-item">Наявність смітників: {{ spot.trash_bins|yesno:"Є,Немає" }}</li>
+            <li class="list-group-item">{% trans "Paid or free" %}: {{ spot.payed_or_free|yesno:_("Paid,Free") }}</li>
+            <li class="list-group-item">{% trans "Private property" %}: {{ spot.private_property|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Parking" %}: {{ spot.parking|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Toilets" %}: {{ spot.toilets|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Gazebos" %}: {{ spot.gazebos|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Tables" %}: {{ spot.tables|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Camping places" %}: {{ spot.camping_places|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Swimming spot" %}: {{ spot.swimming_spot|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Place for fire" %}: {{ spot.place_for_fire|yesno:_("Yes,No") }}</li>
+            <li class="list-group-item">{% trans "Trash bins" %}: {{ spot.trash_bins|yesno:_("Yes,No") }}</li>
         </ul>
-
-        <a href="{% url 'main:home' %}" class="btn btn-primary mb-3">На головну</a>
         {% if user.is_authenticated and user != spot.created_by %}
-            <a href="{% url 'main:submit_complaint' spot.pk %}" class="btn btn-warning mt-3">Подати скаргу</a>
+            <a href="{% url 'main:submit_complaint' spot.pk %}"
+               class="btn btn-danger mt-3">{% trans "Submit complaint" %}</a>
         {% endif %}
 
-        <h3>Коментарі</h3>
+        <h3>{% trans "Comments" %}</h3>
 
         {% if comments %}
             <div class="comments-list">
                 {% for comment in comments %}
                     <div class="comment" id="comment-{{ comment.id }}">
-                        <p>{{ comment.user.username }} - {{ comment.created_at|date:"d.m.Y H:i" }}</p>
-                        <p>{{ comment.text }}</p>
-                        <div class="comment-rating">
+                        <div class="comment-header">
+                            <span class="comment-author">{{ comment.user.username }}</span>
+                            <span class="comment-date">{{ comment.created_at|date:"SHORT_DATETIME_FORMAT"}}</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>{{ comment.text }}</p>
+                        </div>
+                        <div class="comment-photos">
+                            {% for photo in comment.comment_photos.all %}
+                                <a href="{{ photo.image.url }}" target="_blank">
+                                    <img src="{{ photo.image.url }}" alt="{% trans 'Comment photo' %}"
+                                         class="photo-preview">
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <div class="comment-actions">
                             {% if user.is_authenticated %}
-                                <button class="vote-btn upvote" data-comment-id="{{ comment.id }}" data-vote-type="up">
+                                <button class="vote-btn upvote{% if comment.user_vote == 1 %} voted{% endif %}"
+                                        data-comment-id="{{ comment.id }}"
+                                        data-vote-type="up">
                                     👍 <span class="upvotes-count">{{ comment.upvotes }}</span>
                                 </button>
-                                <button class="vote-btn downvote" data-comment-id="{{ comment.id }}"
+                                <button class="vote-btn downvote{% if comment.user_vote == -1 %} voted{% endif %}"
+                                        data-comment-id="{{ comment.id }}"
                                         data-vote-type="down">
                                     👎 <span class="downvotes-count">{{ comment.downvotes }}</span>
                                 </button>
@@ -183,29 +276,20 @@
                                 </button>
                             {% endif %}
                         </div>
-
-
-                        <div class="comment-photos">
-                            {% for photo in comment.comment_photos.all %}
-                                <a href="{{ photo.image.url }}" target="_blank">
-                                    <img src="{{ photo.image.url }}" alt="Фото коментаря" class="photo-preview">
-                                </a>
-                            {% endfor %}
-                        </div>
+                        {% if user == comment.user or user.is_staff %}
+                            <form method="POST" class="delete-comment">
+                                {% csrf_token %}
+                                <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
+                                <button type="submit" class="btn btn-danger btn-sm">{% trans "Delete" %}</button>
+                            </form>
+                        {% endif %}
                     </div>
-                    {% if user == comment.user or user.is_staff %}
-                        <form method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
-                            <button type="submit" class="btn btn-danger">Видалити</button>
-                        </form>
-                    {% endif %}
                 {% endfor %}
             </div>
 
             {% bootstrap_pagination comments %}
         {% else %}
-            <p>Немає коментарів.</p>
+            <p>{% trans "No comments." %}</p>
         {% endif %}
 
         {% if user.is_authenticated %}
@@ -213,10 +297,10 @@
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div id="photo-preview" class="mt-2"></div>
-                <button type="submit" class="btn btn-primary">Залишити коментар</button>
+                <button type="submit" class="btn btn-primary">{% trans "Leave a comment" %}</button>
             </form>
         {% else %}
-            <p>Щоб залишити коментар, увійдіть у систему.</p>
+            <p>{% trans "To leave a comment, please log in." %}</p>
         {% endif %}
 
     </div>
@@ -226,16 +310,33 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Ініціалізація карти
-            var map = L.map('map').setView([{{ spot.location.y }}, {{ spot.location.x }}], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            var mapElement = document.getElementById('map');
+            if (!mapElement) {
+                console.error('Map element not found');
+                return;
+            }
 
-            L.marker([{{ spot.location.y }}, {{ spot.location.x }}]).addTo(map)
-                .bindPopup("{{ spot.name }}").openPopup();
+            var lat = {{ spot.location.y|stringformat:"f" }};
+            var lng = {{ spot.location.x|stringformat:"f" }};
 
-            // Функція для встановлення рейтингу
+            if (isNaN(lat) || isNaN(lng)) {
+                console.error('Invalid coordinates:', lat, lng);
+                return;
+            }
+
+            try {
+                var map = L.map('map').setView([lat, lng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup("{{ spot.name|escapejs }}").openPopup();
+            } catch (error) {
+                console.error('Error initializing map:', error);
+            }
+
+            // Rating function
             var ratingElement = document.getElementById('rating');
             var averageRatingElement = document.getElementById('average-rating');
             var ratingMessageElement = document.getElementById('rating-message');
@@ -302,7 +403,7 @@
                         selectedFiles.items.add(file);
                         createPreview(file);
                     } else {
-                        alert('Файл ' + file.name + ' не є зображенням. Будь ласка, вибирайте тільки фотографії.');
+                        alert('{% trans "File" %} ' + file.name + ' {% trans "is not an image. Please select only photos." %}');
                     }
                 }
                 photoInput.files = selectedFiles.files;
@@ -377,7 +478,7 @@
                             if (data.status === 'success') {
                                 commentElement.querySelector('.upvotes-count').textContent = data.upvotes;
                                 commentElement.querySelector('.downvotes-count').textContent = data.downvotes;
-                                // Додайте візуальний фідбек, наприклад, зміна кольору кнопки
+                                // Add visual feedback, e.g., change button color
                                 this.classList.add('voted');
                                 setTimeout(() => this.classList.remove('voted'), 1000);
                             } else {
@@ -386,7 +487,7 @@
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('Виникла помилка при голосуванні. Будь ласка, спробуйте ще раз.');
+                            alert('{% trans "An error occurred while voting. Please try again." %}');
                         });
                 });
             });

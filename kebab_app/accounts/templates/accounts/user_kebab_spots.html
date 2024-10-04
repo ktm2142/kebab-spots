@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <h1>{% trans "Kebab Spots of" %} {{ user.username }}</h1>
+    <a href="{% url 'accounts:user_recipes' %}" class="btn btn-primary">{% trans "Your recipes" %}</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Rating" %}</th>
+            <th>{% trans "Number of comments" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for spot in kebab_spots %}
+            <tr>
+                <td><a href="{% url 'main:kebab_spot_detail' spot.id %}">{{ spot.name }}</a></td>
+                <td>{{ spot.avg_rating|default_if_none:_("No rating yet") }}</td>
+                <td>{{ spot.comments_count|default_if_none:_("No comments yet") }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">{% trans "You haven't added any kebab spots yet." %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

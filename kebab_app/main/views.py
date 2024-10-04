@@ -1,16 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Avg, Prefetch, Count, Q
-from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Avg
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, CreateView
-from .forms import KebabSpotForm, KebabSpotFilterForm, CommentForm, ComplaintForm
-from .models import KebabSpot, KebabSpotPhoto, Rating, Comment, CommentPhoto, CommentRating, Complaint
+from .forms import KebabSpotForm, CommentForm, ComplaintForm
+from .models import KebabSpot, Complaint
 from .services import KebabSpotRatingService, CommentService, NearbyKebabSpotsService, SearchKebabSpotsService, \
     ComplaintService
 
@@ -80,3 +79,7 @@ class KebabComplaintView(LoginRequiredMixin, CreateView):
         else:
             messages.error(self.request, error_message)
             return self.form_invalid(form)
+
+
+class AboutView(TemplateView):
+    template_name = 'about.html'

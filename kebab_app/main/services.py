@@ -11,18 +11,24 @@ from django.urls import reverse
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError, GeocoderUnavailable, GeocoderQueryError, GeocoderQuotaExceeded
 from django.core.cache import cache
+from django.utils.translation import gettext_lazy as _
 from .forms import CommentForm, KebabSpotFilterForm
 from .mixins import RatingMixin
-from .models import Comment, CommentRating, Rating, KebabSpot, Complaint
+from .models import Comment, CommentRating, Rating, KebabSpot
 import logging
 
 logger = logging.getLogger(__name__)
 
 class GeocodingService:
+    """
+    Service for geocoding addresses using Nominatim.
+    Implements caching to reduce API calls and handles various geocoding exceptions.
+    """
     def __init__(self):
         self.geolocator = Nominatim(user_agent="KebabSpots/1.0 (rghnmju@gmail.com)")
 
     def get_coordinates(self, address):
+        # Implementation details...
         cache_key = f"geocode_{address}"
         cached_result = cache.get(cache_key)
         if cached_result:
@@ -50,6 +56,10 @@ class GeocodingService:
 
 
 class NearbyKebabSpotsService:
+    """
+    Service for retrieving nearby kebab spots based on user's location.
+    Handles both AJAX requests for map data and regular page loads.
+    """
     def get(self, request, *args, **kwargs):
         filter_params, radius = FilteringService.get_filter_params(request)
 
@@ -69,7 +79,7 @@ class NearbyKebabSpotsService:
                 } for spot in kebab_spots]
                 return JsonResponse(spots_data, safe=False)
             else:
-                return JsonResponse({'error': 'Геолокація не надана'}, status=400)
+                return JsonResponse({'error':  _('Geolocation not provided')}, status=400)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -80,6 +90,10 @@ class NearbyKebabSpotsService:
 
 
 class SearchKebabSpotsService:
+    """
+    Service for searching kebab spots based on a query.
+    Utilizes geocoding to find spots near the searched location.
+    """
     def get(self, request, *args, **kwargs):
         if not request.GET.get('q'):
             return redirect('main:home')
@@ -113,13 +127,16 @@ class SearchKebabSpotsService:
                     'avg_rating': round(spot.avg_rating, 1) if spot.avg_rating else 0
                 } for spot in kebab_spots]
             else:
-                context['error_message'] = "Не вдалося знайти вказане місце. Перевірте правильність написання."
+                context['error_message'] = _("Unable to find the specified location. Please check the spelling.")
 
         context['filter_form'] = KebabSpotFilterForm(self.request.GET or None)
         return context
 
 
 class FilteringService:
+    """
+    Static service for filtering kebab spots based on various criteria.
+    """
     @staticmethod
     def get_filter_params(request):
         filter_params = request.GET.dict()
@@ -142,6 +159,10 @@ class FilteringService:
 
 
 class CommentService:
+    """
+    Service for handling operations related to comments on kebab spots.
+    Includes pagination, creation, deletion, and voting on comments.
+    """
     @staticmethod
     def get_paginated_comments(kebab_spot, page_number):
         comments = (Comment.objects
@@ -220,13 +241,17 @@ class CommentService:
                     'downvotes': result['downvotes']
                 })
             except Comment.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'Comment not found'}, status=404)
+                return JsonResponse({'status': 'error', 'message': _('Comment not found')}, status=404)
             except Exception as e:
                 return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+        return JsonResponse({'status': 'error', 'message': _('Invalid request')}, status=400)
 
 
 class KebabSpotRatingService(RatingMixin):
+    """
+    Service for handling ratings for kebab spots.
+    Extends the RatingMixin for common rating functionality.
+    """
     def __init__(self):
         super().__init__(Rating, 'kebab_spot')
 
@@ -243,6 +268,10 @@ class KebabSpotRatingService(RatingMixin):
 
 
 class ComplaintService:
+    """
+    Service for handling complaints about kebab spots.
+    Manages the submission of complaints and updates spot status if needed.
+    """
     @staticmethod
     def submit_complaint(request, kebab_spot_id, form):
         kebab_spot = get_object_or_404(KebabSpot, pk=kebab_spot_id)
@@ -260,11 +289,11 @@ class ComplaintService:
                 kebab_spot.save()
 
                 if kebab_spot.hidden:
-                    messages.warning(request, 'Точку відправлено на розгляд та приховано через велику кількість скарг.')
+                    messages.warning(request, _('The spot has been sent for review and hidden due to a large number of complaints.'))
                 else:
-                    messages.success(request, 'Вашу скаргу було подано.')
+                    messages.success(request, _('Your complaint has been submitted.'))
 
                 return True, None
 
         except IntegrityError:
-            return False, 'Ви вже подавали скаргу на цю точку.'
+            return False, _('You have already submitted a complaint for this spot.')

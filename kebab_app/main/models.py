@@ -5,25 +5,25 @@ from django.db.models import Avg
 
 
 class KebabSpot(models.Model):
-    name = models.CharField(max_length=25, verbose_name="Назва", blank=False, null=False)
-    location = models.PointField(verbose_name="Розташування", null=False)
-    description = models.TextField(verbose_name="Опис", blank=False, null=False)
-    notes = models.TextField(verbose_name="Замітки", blank=True)
-    payed_or_free = models.BooleanField(verbose_name="Платно", default=False)
-    private_property = models.BooleanField(verbose_name="Приватна територія", default=False)
-    parking = models.BooleanField(verbose_name="Парковка", default=False)
-    toilets = models.BooleanField(verbose_name="Туалети", default=False)
-    gazebos = models.BooleanField(verbose_name="Альтанки", default=False)
-    tables = models.BooleanField(verbose_name="Столи", default=False)
-    camping_places = models.BooleanField(verbose_name="Місце для кемпінгу", default=False)
-    swimming_spot = models.BooleanField(verbose_name="Місце для купання", default=False)
-    place_for_fire = models.BooleanField(verbose_name="Облаштоване місце для багаття", default=False)
-    trash_bins = models.BooleanField(verbose_name="Наявність смітників", default=False)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_by", verbose_name="Створено користувачем")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Створено")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Оновлено")
-    hidden = models.BooleanField(default=False, verbose_name="Приховано")
-    complaints_count = models.PositiveIntegerField(default=0, verbose_name="Кількість скарг")
+    name = models.CharField(max_length=25, verbose_name="Name", blank=False, null=False)
+    location = models.PointField(verbose_name="Location", null=False)
+    description = models.TextField(verbose_name="Description", blank=False, null=False)
+    notes = models.TextField(verbose_name="Notes", blank=True)
+    payed_or_free = models.BooleanField(verbose_name="Paid or free of charge", default=False)
+    private_property = models.BooleanField(verbose_name="Private property", default=False)
+    parking = models.BooleanField(verbose_name="Parking", default=False)
+    toilets = models.BooleanField(verbose_name="Toilets", default=False)
+    gazebos = models.BooleanField(verbose_name="Gazebos", default=False)
+    tables = models.BooleanField(verbose_name="Tables", default=False)
+    camping_places = models.BooleanField(verbose_name="Camping places", default=False)
+    swimming_spot = models.BooleanField(verbose_name="Swimming spot", default=False)
+    place_for_fire = models.BooleanField(verbose_name="Place for fire", default=False)
+    trash_bins = models.BooleanField(verbose_name="Trash bins", default=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_by", verbose_name="Created by")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
+    hidden = models.BooleanField(default=False, verbose_name="Hidden")
+    complaints_count = models.PositiveIntegerField(default=0, verbose_name="Complaints count")
 
     def __str__(self):
         return self.name
@@ -37,8 +37,8 @@ class KebabSpot(models.Model):
 
 
     class Meta:
-        verbose_name = "Місце для шашлику"
-        verbose_name_plural = "Місця для шашлику"
+        verbose_name = "Kebab spot"
+        verbose_name_plural = "Kebab spots"
 
 
 

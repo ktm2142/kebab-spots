@@ -10,4 +10,5 @@ urlpatterns = [
     path('kebab-spot/<int:pk>/', views.KebabSpotDetailView.as_view(), name='kebab_spot_detail'),
     path('search', views.SearchView.as_view(), name='search'),
     path('kebab-complaint/<int:pk>/', views.KebabComplaintView.as_view(), name='submit_complaint'),
+    path('about', views.AboutView.as_view(), name='about'),
 ]

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 
-
-{% block title %}Додати нову точку для шашлику - Kebab Spots{% endblock %}
+{% block title %}{% trans "Adding a kebab spot" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
@@ -61,7 +61,6 @@
 
 {% block content %}
     <div class="container mt-4">
-        <h2>Додати нову точку для шашлику</h2>
         <div class="row">
             <div class="col-md-6">
                 <div id="map"></div>
@@ -70,7 +69,7 @@
                 {% crispy form %}
                 <div id="photo-preview" class="mt-2"></div>
                 <div class="form-group">
-                    <label for="id_rating">Рейтинг</label>
+                    <label for="id_rating">{% trans "Rating" %}</label>
                     <div class="rating">
                         <span class="star" data-value="1">&#9733;</span>
                         <span class="star" data-value="2">&#9733;</span>
@@ -114,7 +113,7 @@
                     });
 
                     L.marker([lat, lng], {icon: redIcon}).addTo(map)
-                        .bindPopup('Ви тут')
+                        .bindPopup('{% trans "You are here" %}')
                         .openPopup();
 
                 }, function (error) {
@@ -129,10 +128,10 @@
             var map = initMap('map');
             var marker;
 
-            // Ініціалізація карти з місцезнаходженням користувача
+            // Initialize map with user location
             initMapWithUserLocation(map, "{% url 'main:home' %}");
 
-            // Додаємо обробник кліків на карту
+            // Add click handler to the map
             map.on('click', function (e) {
                 if (marker) {
                     map.removeLayer(marker);
@@ -153,7 +152,7 @@
                         selectedFiles.items.add(file);
                         createPreview(file);
                     } else {
-                        alert('Файл ' + file.name + ' не є зображенням. Будь ласка, вибирайте тільки фотографії.');
+                        alert('{% trans "File" %} ' + file.name + ' {% trans "is not an image. Please select only photos." %}');
                     }
                 }
                 photoInput.files = selectedFiles.files;

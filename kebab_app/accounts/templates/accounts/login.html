@@ -2,16 +2,6 @@
 {% load socialaccount %}
 
 {% block content %}
-<h2>Вхід</h2>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Увійти</button>
-</form>
-
-<hr>
-
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}

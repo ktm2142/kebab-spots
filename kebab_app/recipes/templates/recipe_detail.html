@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-
-{% block title %}{{ recipe.title }} - Рецепти{% endblock %}
+{% load i18n %}
+{% block title %}{{ recipe.title }} - Recipes{% endblock %}
 
 {% block extra_css %}
     <style>
@@ -38,57 +38,57 @@
 
 {% block content %}
     <div class="container mt-4">
-        <h1>{{ recipe.title }}</h1>
         <form action="{% url 'recipes:recipe_search' %}" method="get" class="mb-4">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Пошук рецептів"
+                <input type="text" name="q" class="form-control" placeholder="{% trans "Search recipes" %}"
                        value="{{ request.GET.q|default:'' }}">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Шукати</button>
+                    <button class="btn btn-primary" type="submit">{% trans "Search" %}</button>
                 </div>
             </div>
         </form>
+        <h1>{{ recipe.title }}</h1>
 
         <p class="text-muted">
-            Автор: {{ recipe.author.username }} | Створено: {{ recipe.created_at|date:"d.m.Y" }}
+            {% trans "Author" %}: {{ recipe.author.username }}
+            | {% trans "Created at" %}: {{ recipe.created_at|date:"SHORT_DATETIME_FORMAT" }}
         </p>
 
         <div class="mb-3">
-            <h3>Рейтинг:</h3>
+            <h4>{% trans "Rating" %}:</h4>
             <div class="rating" id="rating">
                 {% for i in "12345" %}
                     <span class="star" data-value="{{ i }}">★</span>
                 {% endfor %}
-                <p id="rating-message">Вашу оцінку враховано!</p>
+                <p id="rating-message">{% trans "Your rating has been recorded!" %}</p>
             </div>
-            <p>Середній рейтинг: <span id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
+            <p>{% trans "Average rating" %}: <span
+                    id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
         </div>
 
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">Опис</h5>
+                <h5 class="card-title">{% trans "Description" %}</h5>
                 <p class="card-text">{{ recipe.description }}</p>
             </div>
         </div>
 
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">Інгредієнти</h5>
+                <h5 class="card-title">{% trans "Ingredients" %}</h5>
                 <p class="card-text">{{ recipe.ingredients }}</p>
             </div>
         </div>
         <div class="mb-3">
             {% for photo in photos.all %}
                 <a href="{{ photo.image.url }}" target="_blank">
-                    <img src="{{ photo.image.url }}" alt="Фото точки" class="photo-preview">
+                    <img src="{{ photo.image.url }}" class="photo-preview">
                 </a>
             {% endfor %}
         </div>
 
 
-        <a href="{% url 'recipes:recipes_list' %}" class="btn btn-primary mb-3">Назад до списку рецептів</a>
-
-        <!-- Тут можна додати секцію для коментарів, якщо вона вам потрібна -->
+        <a href="{% url 'recipes:recipes_list' %}" class="btn btn-primary mb-3">{% trans "Back to recipes list" %}</a>
 
     </div>
 {% endblock %}

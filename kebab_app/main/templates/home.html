@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Головна - Kebab Spots{% endblock %}
+{% load i18n %}
+
+{% block title %}{% trans "Nearest points" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
@@ -8,6 +10,13 @@
     <style>
         #map {
             height: 400px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 300px;
+            }
         }
 
         .filter-form {
@@ -20,41 +29,99 @@
         .filter-form .form-group {
             margin-bottom: 10px;
         }
+
+        .map-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-add-container {
+            margin-bottom: 15px;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-form input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .full-width-btn {
+            width: 100%;
+        }
+
+        .add-kebab-spot-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-form input {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .search-form button {
+                width: 100%;
+            }
+
+            .add-kebab-spot-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .filter-form label {
+                font-size: 0.9em;
+            }
+
+            .filter-form .form-control {
+                font-size: 0.9em;
+                padding: 0.2rem 0.5rem;
+            }
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-        <div class="row justify-content-center mb-3">
-            <div class="col-12 text-center">
-                <form action="{% url 'main:search' %}" method="get" class="form-inline justify-content-center mb-3">
-                    <input type="text" id="searchQuery" name="q" class="form-control mr-sm-2"
-                           placeholder="Введіть назву населеного пункту">
-                    <button type="submit" class="btn btn-primary">Пошук</button>
-                </form>
-                <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary">Додати точку для шашлику</a>
-            </div>
-        </div>
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+    <div class="container-fluid mt-4">
         <div class="row">
-            <div class="col-lg-4 col-md-12">
-                <div class="filter-form">
-                    <h4>Фільтри</h4>
-                    <form method="get" action="{% url 'main:home' %}">
-                        {% crispy filter_form %}
+            <div class="col-12 col-md-4 mb-3">
+                <div class="search-add-container">
+                    <form action="{% url 'main:search' %}" method="get" class="search-form">
+                        <input type="text" id="searchQuery" name="q" class="form-control"
+                               placeholder="{% trans 'Enter the name of the settlement' %}">
+                        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
                     </form>
+                    <a href="{% url 'main:create_kebab_spot' %}"
+                       class="btn btn-primary add-kebab-spot-btn">{% trans "Add kebab spot" %}</a>
+                </div>
+                <div class="filter-form">
+                    <button class="btn btn-primary d-md-none w-100 mb-2" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+                        {% trans "Filters" %} <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="collapse d-md-block" id="filterCollapse">
+                        <h4 class="d-none d-md-block">{% trans "Filters" %}</h4>
+                        <form method="get" action="{% url 'main:home' %}">
+                            {% crispy filter_form %}
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-8 col-md-12">
-                <div id="map"></div>
+            <div class="col-12 col-md-8">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -69,28 +136,12 @@
         document.addEventListener('DOMContentLoaded', function () {
             var map = initMap('map');
             var userMarker;
-
-            initMapWithUserLocation(map, "{% url 'main:home' %}");
-
             var kebabSpots = {{ kebab_spots_json|safe }};
-            console.log('Kebab spots data:', kebabSpots);
-            addKebabSpots(map, kebabSpots);
 
             function initMap(elementId, initialView = [0, 0], zoom = 13) {
                 var map = L.map(elementId).setView(initialView, zoom);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
-
-                L.control.locate({
-                    position: 'topright',
-                    strings: {
-                        title: "Показати моє місцезнаходження"
-                    },
-                    locateOptions: {
-                        enableHighAccuracy: true
-                    },
-                    drawCircle: false
                 }).addTo(map);
 
                 return map;
@@ -102,7 +153,7 @@
                         var latlng = [parseFloat(spot.lat), parseFloat(spot.lng)];
                         var marker = L.marker(latlng).addTo(map);
 
-                        var tooltipContent = spot.name + '<br>Рейтинг: ' + (spot.avg_rating ? spot.avg_rating.toFixed(1) : 'Немає оцінок');
+                        var tooltipContent = spot.name + '<br>{% trans "Rating" %}: ' + (spot.avg_rating ? spot.avg_rating.toFixed(1) : '{% trans "No ratings" %}');
                         marker.bindTooltip(tooltipContent, {
                             permanent: false,
                             direction: 'top',
@@ -119,9 +170,12 @@
             }
 
             function initMapWithUserLocation(map, url) {
+                let isDataLoaded = false;
+
                 function onLocationFound(e) {
                     var lat = e.latitude;
                     var lng = e.longitude;
+
                     map.setView([lat, lng], 13);
 
                     var redIcon = new L.Icon({
@@ -138,26 +192,40 @@
                     }
 
                     userMarker = L.marker([lat, lng], {icon: redIcon}).addTo(map)
-                        .bindPopup('Ви тут')
+                        .bindPopup('{% trans "You are here" %}')
                         .openPopup();
 
-                    var currentUrl = new URL(window.location.href);
-                    currentUrl.searchParams.set('lat', lat);
-                    currentUrl.searchParams.set('lng', lng);
+                    if (!isDataLoaded) {
+                        var currentUrl = new URL(window.location.href);
+                        currentUrl.searchParams.set('lat', lat);
+                        currentUrl.searchParams.set('lng', lng);
 
-                    fetchKebabSpots(currentUrl.toString(), function (spots) {
-                        addKebabSpots(map, spots);
-                    });
+                        fetchKebabSpots(currentUrl.toString(), function (spots) {
+                            addKebabSpots(map, spots);
+                            isDataLoaded = true;
+                        });
+                    }
                 }
 
                 function onLocationError(e) {
-                    console.error("Помилка геолокації: ", e.message);
+                    console.error("{% trans 'Geolocation error' %}: ", e.message);
                 }
 
                 map.on('locationfound', onLocationFound);
                 map.on('locationerror', onLocationError);
 
-                map.locate({setView: true, maxZoom: 16});
+                var locateControl = L.control.locate({
+                    position: 'topright',
+                    strings: {
+                        title: "{% trans 'Show my location' %}"
+                    },
+                    locateOptions: {
+                        enableHighAccuracy: true
+                    },
+                    drawCircle: false
+                }).addTo(map);
+
+                locateControl.start();
             }
 
             function fetchKebabSpots(url, callback) {
@@ -168,13 +236,15 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('Fetched kebab spots:', data);
                         callback(data);
                     })
                     .catch(error => {
-                        console.error('Error fetching kebab spots:', error);
+                        console.error('{% trans "Error fetching kebab spots" %}:', error);
                     });
             }
+
+            initMapWithUserLocation(map, "{% url 'main:home' %}");
+            addKebabSpots(map, kebabSpots);
         });
     </script>
 {% endblock %}

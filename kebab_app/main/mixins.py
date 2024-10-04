@@ -1,6 +1,9 @@
 from django.http import JsonResponse
 
 class RatingMixin:
+    """
+    Mixin for creating and updating ratings.
+    """
     def __init__(self, rating_model, related_object_field):
         self.rating_model = rating_model
         self.related_object_field = related_object_field

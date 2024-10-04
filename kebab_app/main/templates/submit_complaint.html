@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
+{% block title %}{% trans "Сomplaint" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Подати скаргу</h2>
+    <h2>{% trans "Submit a complaint" %}</h2>
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn btn-primary mt-3">Відправити скаргу</button>
+        <button type="submit" class="btn btn-primary mt-3">{% trans "Send complaint" %}</button>
     </form>
 </div>
 

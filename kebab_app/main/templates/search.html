@@ -1,59 +1,114 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Пошук - Kebab Spots{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Search" %} - Kebab Spots{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
     <style>
         #map {
             height: 400px;
+            width: 100%;
         }
+
         .filter-form {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
+
         .filter-form .form-group {
             margin-bottom: 10px;
+        }
+
+        .search-add-container {
+            margin-bottom: 15px;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-form input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .full-width-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 300px;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-form input {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .search-form button,
+            .full-width-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .filter-form label {
+                font-size: 0.9em;
+            }
+            .filter-form .form-control {
+                font-size: 0.9em;
+                padding: 0.2rem 0.5rem;
+            }
         }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-        <div class="row justify-content-center mb-3">
-            <div class="col-12 text-center">
-                <form action="{% url 'main:search' %}" method="get" class="form-inline justify-content-center mb-3">
-                    <input type="text" id="searchQuery" name="q" class="form-control mr-sm-2"
-                           placeholder="Введіть назву населеного пункту" value="{{ query }}">
-                    <button type="submit" class="btn btn-primary">Пошук</button>
-                </form>
-                <a href="{% url 'main:home' %}" class="btn btn-secondary">На головну</a>
-                <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary ml-2">Додати точку для шашлику</a>
-            </div>
-        </div>
-
-        {% if error_message %}
-            <div class="row justify-content-center">
-                <div class="col-12 text-center">
-                    <div class="alert alert-warning">{{ error_message }}</div>
-                </div>
-            </div>
-        {% endif %}
-
+    <div class="container-fluid mt-4">
         <div class="row">
-            <div class="col-lg-4 col-md-12">
-                <div class="filter-form">
-                    <h4>Фільтри</h4>
-                    <form method="get" action="{% url 'main:search' %}">
-                        <input type="hidden" name="q" value="{{ query }}">
-                        {% crispy filter_form %}
+            <div class="col-12 col-md-4 mb-3">
+                <div class="search-add-container">
+                    <form action="{% url 'main:search' %}" method="get" class="search-form">
+                        <input type="text" id="searchQuery" name="q" class="form-control"
+                               placeholder="{% trans 'Enter the name of the settlement' %}" value="{{ query }}">
+                        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
                     </form>
+                    <a href="{% url 'main:create_kebab_spot' %}" class="btn btn-primary full-width-btn">{% trans "Add kebab spot" %}</a>
+                </div>
+
+                {% if error_message %}
+                    <div class="alert alert-warning">{{ error_message }}</div>
+                {% endif %}
+
+                <div class="filter-form">
+                    <button class="btn btn-primary d-md-none w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+                        {% trans "Filters" %} <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="collapse d-md-block" id="filterCollapse">
+                        <h4 class="d-none d-md-block">{% trans "Filters" %}</h4>
+                        <form method="get" action="{% url 'main:search' %}">
+                            <input type="hidden" name="q" value="{{ query }}">
+                            {% crispy filter_form %}
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-8 col-md-12">
-                <div id="map"></div>
+            <div class="col-12 col-md-8">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +123,6 @@
         var kebabSpots = {{ kebab_spots_json|default:"[]"|safe }};
         var searchCoordinates = {{ search_coordinates|default:"null"|safe }};
 
-        console.log('Kebab spots data:', kebabSpots);
         addKebabSpots(map, kebabSpots, searchCoordinates);
 
         function initMap(elementId, initialView = [50.4501, 30.5234], zoom = 6) {
@@ -85,7 +139,8 @@
                     var latlng = [parseFloat(spot.lat), parseFloat(spot.lng)];
                     var marker = L.marker(latlng).addTo(map);
 
-                    var tooltipContent = spot.name + '<br>Рейтинг: ' + (spot.avg_rating ? spot.avg_rating.toFixed(1) : 'Немає оцінок');
+                    var tooltipContent = spot.name + '<br>{% trans "Rating" %}: ' +
+                        (spot.avg_rating ? spot.avg_rating.toFixed(1) : '{% trans "No ratings" %}');
                     marker.bindTooltip(tooltipContent, {
                         permanent: false,
                         direction: 'top',

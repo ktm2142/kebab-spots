@@ -1,69 +1,75 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Форма пошуку -->
-            <form action="{% url 'recipes:recipe_search' %}" method="get" class="mb-4">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Пошук рецептів"
-                           value="{{ query }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Шукати</button>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Форма пошуку -->
+                <form action="{% url 'recipes:recipe_search' %}" method="get" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="{% trans "Search recipes" %}"
+                               value="{{ query }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">{% trans "Search" %}</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
 
-            <!-- Результати пошуку -->
-            {% if recipes %}
-                <div class="list-group">
-                    {% for recipe in recipes %}
-                        <a href="{% url 'recipes:recipe_detail' recipe.id %}"
-                           class="list-group-item list-group-item-action text-decoration-none">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ recipe.title }}</h5>
-                                <small>{{ recipe.created_at|date:"d.m.Y" }}</small>
-                            </div>
-                            <small>Автор: {{ recipe.author.username }}</small>
+                <!-- Результати пошуку -->
+                {% if recipes %}
+                    <div class="list-group">
+                        {% for recipe in recipes %}
+                            <a href="{% url 'recipes:recipe_detail' recipe.id %}"
+                               class="list-group-item list-group-item-action text-decoration-none">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ recipe.title }}</h5>
+                                    <small>{{ recipe.created_at|date:"SHORT_DATETIME_FORMAT" }}</small>
+                                </div>
+                                <small>{% trans "Author" %}: {{ recipe.author.username }}</small>
 
-                            <!-- Середній рейтинг рецепту -->
-                            <p class="mt-2">Середній рейтинг:
-                                <strong>{{ recipe.avg_rating|default:0|floatformat:1 }}</strong>
-                            </p>
-                        </a>
-                    {% endfor %}
-                </div>
-
-                <!-- Пагінація -->
-                {% if is_paginated %}
-                    <div class="mt-4">
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                {% if page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                           href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Попередня</a>
-                                    </li>
-                                {% endif %}
-                                <li class="page-item disabled">
-                                    <span class="page-link">Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
-                                </li>
-                                {% if page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                           href="?q={{ query }}&page={{ page_obj.next_page_number }}">Наступна</a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
+                                <!-- Середній рейтинг рецепту -->
+                                <p class="mt-2">{% trans "Average rating" %}:
+                                    <strong>{{ recipe.avg_rating|default:0|floatformat:1 }}</strong>
+                                </p>
+                            </a>
+                        {% endfor %}
                     </div>
+
+                    <!-- Пагінація -->
+                    {% if is_paginated %}
+                        <div class="mt-4">
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="?q={{ query }}&page={{ page_obj.previous_page_number }}">
+                                                {% trans "Previous" %}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">{% trans "Page" %}
+                                            {{ page_obj.number }}
+                                            {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
+                                    </li>
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="?q={{ query }}&page={{ page_obj.next_page_number }}">
+                                               {% trans "Next" %}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p>{% trans "No recipes found." %}.</p>
                 {% endif %}
-            {% else %}
-                <p>За вашим запитом нічого не знайдено.</p>
-            {% endif %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
