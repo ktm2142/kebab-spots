@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://kebab-spots-8dc29cafaa4e.herokuapp.com/', '127.0.0.1']
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -167,7 +167,7 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_AUTO_SIGNUP = True
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
