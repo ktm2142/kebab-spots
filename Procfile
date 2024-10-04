@@ -1,1 +1,1 @@
-web: gunicorn kebab_app.src.wsgi --log-file -
+web: gunicorn kebab_spots.kebab_app.src.wsgi --log-file -
