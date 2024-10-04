@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <h1>{% trans "Recipes of" %} {{ user.username }}</h1>
+    <a href="{% url 'accounts:user_kebab_spots' %}" class="btn btn-primary">{% trans "Your kebab spots" %}</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Rating" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for recipe in recipes %}
+            <tr>
+                <td><a href="{% url 'recipes:recipe_detail' recipe.id %}">{{ recipe.title }}</a></td>
+                <td>{{ recipe.avg_rating|default_if_none:_("No rating yet") }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">{% trans "You haven't added any recipes yet." %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

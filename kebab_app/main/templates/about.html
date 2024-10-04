@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "About KebabSpots" %}</h1>
+
+<p>{% trans "KebabSpots is a portfolio project developed to showcase my skills as a Python Django developer." %}</p>
+<p>{% trans "This web-based application allows users to find, rate and share outdoor barbecue locations." %}</p>
+<p>{% trans "It also features user authentication, geolocation services, and a rating system." %}</p>
+
+<h1>{% trans "Project Overview" %}</h1>
+
+<p>{% trans "- Built with Django and OpenStreetMap integration" %}</p>
+<p>{% trans "- Utilizes Django Class-Based Views for efficient development" %}</p>
+<p>{% trans "- Features user authentication, geolocation services, and a rating system" %}</p>
+
+<h1>{% trans "Developer Information" %}</h1>
+
+<p>{% trans "This project was created by Volodymyr Oliinyk, a Python Django developer." %}</p>
+<p>{% trans "I'm passionate about building robust web applications and continuously improving my skills." %}</p>
+
+<h1>{% trans "Contact Information" %}</h1>
+
+<a href="https://www.linkedin.com/in/volodymyr-oliinyk-073653291/">{% trans "LinkedIn" %}</a>
+<p><a href="rghnmju@gmail.com">rghnmju@gmail.com</a></p>
+
+<p>{% trans "I'm currently seeking new opportunities in Python Django development." %}</p>
+<p>{% trans "If you're interested in collaborating or have any questions about this project, please don't hesitate to reach out." %}</p>
+
+<p>{% trans "Thank you for visiting KebabSpots!" %}</p>
+{% endblock %}
