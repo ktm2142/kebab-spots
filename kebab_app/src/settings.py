@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['kebab-spots-8dc29cafaa4e.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['kebab-spots-8dc29cafaa4e.herokuapp.com', '127.0.0.1']
 
 INTERNAL_IPS = [
     '127.0.0.1',
