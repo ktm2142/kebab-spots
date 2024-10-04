@@ -101,28 +101,35 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+# Database configuration
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    # Heroku environment
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=500, ssl_require=True)
     }
-}
-
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
-if db_from_env:
-    DATABASES['default'].update(db_from_env)
-    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 else:
-    DATABASES['default'].update({
-        'NAME': config('DB_NAME', default='your_local_db_name'),
-        'USER': config('DB_USER', default='your_local_db_user'),
-        'PASSWORD': config('DB_PASSWORD', default='your_local_db_password'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-    })
+    # Local environment
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': config('DB_NAME', default='your_local_db_name'),
+            'USER': config('DB_USER', default='your_local_db_user'),
+            'PASSWORD': config('DB_PASSWORD', default='your_local_db_password'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
+    }
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-db_from_env['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-DATABASES['default'].update(db_from_env)
+# Ensure PostGIS engine
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
+# GDAL and GEOS library paths (for Heroku)
+if 'GDAL_LIBRARY_PATH' in os.environ:
+    GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+if 'GEOS_LIBRARY_PATH' in os.environ:
+    GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
