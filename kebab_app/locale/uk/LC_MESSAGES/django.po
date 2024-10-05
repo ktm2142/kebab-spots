@@ -349,7 +349,7 @@ msgstr "Введіть назву населеного пункту"
 #: recipes/templates/recipe_search.html:14
 #: recipes/templates/recipes_list.html:17
 msgid "Search"
-msgstr "Пошук"
+msgstr "Пошук1"
 
 #: main/templates/home.html:106 main/templates/search.html:88
 msgid "Add kebab spot"

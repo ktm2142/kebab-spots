@@ -82,7 +82,7 @@ msgstr ""
 
 #: main/forms.py:34 main/templates/kebab_spot_detail.html:219
 msgid "Paid or free"
-msgstr ""
+msgstr "Free or paid"
 
 #: main/forms.py:35 main/forms.py:135 main/templates/kebab_spot_detail.html:220
 msgid "Private property"
