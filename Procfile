@@ -1,1 +1,1 @@
-web: gunicorn --chdir kebab_app src.wsgi --log-file -
+web: locale-gen en_US.UTF-8 && locale-gen uk_UA.UTF-8 && gunicorn --chdir kebab_app src.wsgi --log-file -
