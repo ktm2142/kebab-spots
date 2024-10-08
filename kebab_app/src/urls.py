@@ -16,8 +16,7 @@ urlpatterns += i18n_patterns(
     path('recipes/', include('recipes.urls', namespace='recipes')),
 )
 
-# Додайте статичні та медіа URL-шаблони
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 if settings.DEBUG:
     import debug_toolbar
