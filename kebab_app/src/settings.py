@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['kebab-spots-8dc29cafaa4e.herokuapp.com', '127.0.0.1']
 
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_bootstrap5',
     'leaflet',
+    'storages', # for Heroku
 
     'main',
     'accounts',
@@ -131,6 +132,23 @@ if 'GEOS_LIBRARY_PATH' in os.environ:
     GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 
 
+if not DEBUG:
+    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='eu-north-1')
+
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+    # Use S3 for storing media files
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
+    # Use S3 for storing static files
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -182,7 +200,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'uk'
+LANGUAGE_CODE = 'en-us'
 
 LANGUAGES = [
     ('en', _('English')),

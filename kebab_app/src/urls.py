@@ -8,10 +8,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
 ]
 
-# Додайте URL-шаблони, які ви хочете локалізувати, до i18n_patterns
 urlpatterns += i18n_patterns(
     path('', include('main.urls', namespace='main')),
     path('recipes/', include('recipes.urls', namespace='recipes')),
