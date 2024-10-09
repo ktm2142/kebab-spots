@@ -3,11 +3,11 @@
 # Знаходимо каталог білду динамічно
 BUILD_DIR=$(find /tmp -maxdepth 1 -type d -name "build_*")
 
-# Оновлюємо змінну середовища DJANGO_SETTINGS_MODULE для правильного шляху до налаштувань
-export DJANGO_SETTINGS_MODULE=kebab_app.src.settings
+# Оновлюємо змінну середовища DJANGO_SETTINGS_MODULE з правильним шляхом
+export DJANGO_SETTINGS_MODULE=src.settings
 
 # Оновлюємо PYTHONPATH, використовуючи знайдений шлях
-export PYTHONPATH="$BUILD_DIR/kebab_app"
+export PYTHONPATH="$BUILD_DIR"
 
 echo "Starting post_compile script..."
 
