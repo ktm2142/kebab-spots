@@ -10,7 +10,6 @@ from recipes.models import Recipe
 
 
 class CustomLoginView(LoginView):
-    template_name = 'accounts/login.html'
 
     def get(self, request, *args, **kwargs):
         if 'google' in request.GET:

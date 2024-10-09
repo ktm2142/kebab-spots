@@ -6,7 +6,6 @@ from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('i18n/', include('django.conf.urls.i18n')),
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('accounts/', include('allauth.urls')),
 ]
@@ -14,9 +13,8 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('', include('main.urls', namespace='main')),
     path('recipes/', include('recipes.urls', namespace='recipes')),
+    path('i18n/', include('django.conf.urls.i18n')),
 )
-
-
 
 if settings.DEBUG:
     import debug_toolbar

@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_bootstrap5',
     'leaflet',
-    'storages', # for Heroku
+    'storages',
 
     'main',
     'accounts',
