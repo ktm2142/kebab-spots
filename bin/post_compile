@@ -5,11 +5,18 @@ export DJANGO_SETTINGS_MODULE=kebab_app.settings
 
 echo "Starting post_compile script..."
 
-# Перевірка вмісту директорій для діагностики
-ls -la /app
-ls -la /app/kebab_app
+# Перевірка вмісту кореневої директорії
+ls -la /
 
-# Виконуємо команду для компіляції файлів перекладу
-python /app/kebab_app/manage.py compilemessages
+# Пошук файлу manage.py
+MANAGE_PY_PATH=$(find / -name manage.py 2>/dev/null)
+echo "Found manage.py at: $MANAGE_PY_PATH"
+
+# Виконуємо команду для компіляції файлів перекладу, якщо manage.py було знайдено
+if [ -n "$MANAGE_PY_PATH" ]; then
+    python "$MANAGE_PY_PATH" compilemessages
+else
+    echo "manage.py not found. Skipping compilemessages."
+fi
 
 echo "Finished compilemessages step."
