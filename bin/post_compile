@@ -3,6 +3,9 @@
 # Встановлюємо змінну середовища DJANGO_SETTINGS_MODULE для правильного шляху до налаштувань
 export DJANGO_SETTINGS_MODULE=kebab_app.settings
 
+# Додаємо кореневу директорію проекту в PYTHONPATH
+export PYTHONPATH=/tmp/build_9005ab23
+
 echo "Starting post_compile script..."
 
 # Перевірка вмісту кореневої директорії
