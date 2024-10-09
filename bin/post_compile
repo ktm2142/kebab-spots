@@ -1,28 +1,23 @@
 #!/bin/bash
 
-# Встановлюємо змінну середовища DJANGO_SETTINGS_MODULE для правильного шляху до налаштувань
+# Знаходимо каталог білду динамічно
+BUILD_DIR=$(find /tmp -maxdepth 1 -type d -name "build_*")
+
+# Оновлюємо змінну середовища DJANGO_SETTINGS_MODULE для правильного шляху до налаштувань
 export DJANGO_SETTINGS_MODULE=kebab_app.src.settings
 
-# Виведення змісту кореневої директорії для пошуку проекту
-echo "Checking contents of the root directory:"
-ls -la /
+# Оновлюємо PYTHONPATH, використовуючи знайдений шлях
+export PYTHONPATH="$BUILD_DIR/kebab_app"
 
-# Виведення змісту каталогу /tmp для пошуку проекту
-echo "Checking contents of the /tmp directory:"
-ls -la /tmp
+echo "Starting post_compile script..."
 
-# Виведення змісту каталогу /tmp/build_* для пошуку проекту
-BUILD_DIR=$(find /tmp -maxdepth 1 -type d -name "build_*")
+# Перевірка вмісту каталогу для діагностики
 echo "Checking contents of $BUILD_DIR:"
 ls -la "$BUILD_DIR"
 
 # Пошук файлу manage.py
-MANAGE_PY_PATH=$(find "$BUILD_DIR" -name "manage.py")
+MANAGE_PY_PATH="$BUILD_DIR/kebab_app/manage.py"
 echo "Found manage.py at: $MANAGE_PY_PATH"
-
-# Виведення значення змінної PYTHONPATH
-export PYTHONPATH="$BUILD_DIR/kebab_app"
-echo "PYTHONPATH is set to: $PYTHONPATH"
 
 # Виконуємо команду для компіляції файлів перекладу, якщо manage.py було знайдено
 if [ -e "$MANAGE_PY_PATH" ]; then
