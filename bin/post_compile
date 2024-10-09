@@ -1,4 +1,12 @@
 #!/bin/bash
+
+export DJANGO_SETTINGS_MODULE=kebab_app.settings
+
 echo "Starting post_compile script..."
-python kebab_app/manage.py compilemessages
+
+ls -la /app
+ls -la /app/kebab_app
+
+python /app/kebab_app/manage.py compilemessages
+
 echo "Finished compilemessages step."
