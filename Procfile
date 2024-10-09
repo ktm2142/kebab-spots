@@ -1,1 +1,1 @@
-web: gunicorn --chdir kebab_app src.wsgi --log-file -
+web: gunicorn --chdir kebab_app.src.wsgi --log-file -
