@@ -111,7 +111,7 @@
                         {% trans "Filters" %} <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="collapse d-md-block" id="filterCollapse">
-                        <h4 class="d-none d-md-block">{% trans "Filters" %}</h4>
+                        <h4 class="d-none d-md-block">{% translate "Filters" %}</h4>
                         <form method="get" action="{% url 'main:home' %}">
                             {% crispy filter_form %}
                         </form>
