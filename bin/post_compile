@@ -11,13 +11,13 @@ echo "Starting post_compile script..."
 # Перевірка вмісту кореневої директорії
 ls -la /
 
-# Перевірка вмісту каталогу /app/kebab_app
-echo "Checking contents of /app/kebab_app:"
-ls -la /app/kebab_app
+# Перевірка вмісту каталогу /app, щоб зрозуміти, де знаходяться ваші файли
+echo "Checking contents of /app:"
+ls -la /app
 
 # Пошук файлу manage.py
 MANAGE_PY_PATH="/app/kebab_app/manage.py"
-echo "Found manage.py at: $MANAGE_PY_PATH"
+echo "Expected manage.py path: $MANAGE_PY_PATH"
 
 # Виведення значення змінної PYTHONPATH
 echo "PYTHONPATH is set to: $PYTHONPATH"
