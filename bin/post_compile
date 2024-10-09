@@ -1,12 +1,15 @@
 #!/bin/bash
 
-export DJANGO_SETTINGS_MODULE=src.settings
+# Встановлюємо змінну середовища DJANGO_SETTINGS_MODULE для правильного шляху до налаштувань
+export DJANGO_SETTINGS_MODULE=kebab_app.settings
 
 echo "Starting post_compile script..."
 
-ls -la /
-ls -la /kebab_app
+# Перевірка вмісту директорій для діагностики
+ls -la /app
+ls -la /app/kebab_app
 
-python /kebab_app/manage.py compilemessages
+# Виконуємо команду для компіляції файлів перекладу
+python /app/kebab_app/manage.py compilemessages
 
 echo "Finished compilemessages step."
