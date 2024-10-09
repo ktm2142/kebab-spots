@@ -1,1 +1,4 @@
-cd kebab_app && python manage.py compilemessages
+#!/bin/bash
+echo "Starting post_compile script..."
+python kebab_app/manage.py compilemessages
+echo "Finished compilemessages step."
