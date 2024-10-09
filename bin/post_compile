@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # Встановлюємо змінну середовища DJANGO_SETTINGS_MODULE для правильного шляху до налаштувань
-export DJANGO_SETTINGS_MODULE=src.settings
+export DJANGO_SETTINGS_MODULE=kebab_app.src.settings
 
 # Додаємо кореневу директорію проекту в PYTHONPATH
-BUILD_DIR=$(dirname "$(find / -name manage.py 2>/dev/null)")
-export PYTHONPATH=$BUILD_DIR
+export PYTHONPATH=/app/kebab_app
 
 echo "Starting post_compile script..."
 
@@ -13,14 +12,15 @@ echo "Starting post_compile script..."
 ls -la /
 
 # Пошук файлу manage.py
-echo "Found manage.py at: $BUILD_DIR/manage.py"
+MANAGE_PY_PATH="/app/kebab_app/manage.py"
+echo "Found manage.py at: $MANAGE_PY_PATH"
 
 # Виведення значення змінної PYTHONPATH
 echo "PYTHONPATH is set to: $PYTHONPATH"
 
 # Виконуємо команду для компіляції файлів перекладу, якщо manage.py було знайдено
-if [ -n "$BUILD_DIR" ]; then
-    python "$BUILD_DIR/manage.py" compilemessages
+if [ -f "$MANAGE_PY_PATH" ]; then
+    python "$MANAGE_PY_PATH" compilemessages
 else
     echo "manage.py not found. Skipping compilemessages."
 fi
