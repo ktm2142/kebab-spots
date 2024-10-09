@@ -11,6 +11,10 @@ echo "Starting post_compile script..."
 # Перевірка вмісту кореневої директорії
 ls -la /
 
+# Перевірка вмісту каталогу /app/kebab_app
+echo "Checking contents of /app/kebab_app:"
+ls -la /app/kebab_app
+
 # Пошук файлу manage.py
 MANAGE_PY_PATH="/app/kebab_app/manage.py"
 echo "Found manage.py at: $MANAGE_PY_PATH"
@@ -19,7 +23,7 @@ echo "Found manage.py at: $MANAGE_PY_PATH"
 echo "PYTHONPATH is set to: $PYTHONPATH"
 
 # Виконуємо команду для компіляції файлів перекладу, якщо manage.py було знайдено
-if [ -f "$MANAGE_PY_PATH" ]; then
+if [ -e "$MANAGE_PY_PATH" ]; then
     python "$MANAGE_PY_PATH" compilemessages
 else
     echo "manage.py not found. Skipping compilemessages."
