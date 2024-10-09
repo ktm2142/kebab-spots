@@ -1,1 +1,1 @@
-python kebab_app/manage.py compilemessages
+python kebab-spots/kebab_app/manage.py compilemessages
