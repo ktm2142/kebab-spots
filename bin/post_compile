@@ -1,1 +1,1 @@
-cd /tmp/build_9b18615f/kebab_app && python manage.py compilemessages
+cd kebab_app && python manage.py compilemessages
