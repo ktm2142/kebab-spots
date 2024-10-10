@@ -1,5 +1,2 @@
-cd kebab_app
-python manage.py compilemessages
-
-export PYTHONPATH=$PYTHONPATH:/app/kebab_app
-python manage.py compilemessages
+export DJANGO_SETTINGS_MODULE=kebab_app.src.settings
+python kebab_app/manage.py compilemessages
