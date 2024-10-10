@@ -1,3 +1,1 @@
-echo "Running post_compile in directory: $(pwd)"
-ls -la kebab_app/
-python kebab_app/manage.py compilemessages --settings=kebab_app.src.settings
+cd /tmp/build_9b18615f/kebab_app && python manage.py compilemessages
