@@ -208,7 +208,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',
+    BASE_DIR / 'kebab_app' / 'locale',
 ]
 
 TIME_ZONE = 'UTC'
