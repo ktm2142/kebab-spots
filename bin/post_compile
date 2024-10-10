@@ -1,6 +1,0 @@
-echo "Current working directory: $(pwd)"
-ls -la
-cd kebab_app
-echo "Changed directory to kebab_app: $(pwd)"
-ls -la
-python manage.py compilemessages
