@@ -1,0 +1,5 @@
+cd kebab_app
+python manage.py compilemessages
+
+export PYTHONPATH=$PYTHONPATH:/app/kebab_app
+python manage.py compilemessages
