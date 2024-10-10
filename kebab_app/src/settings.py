@@ -59,9 +59,9 @@ INSTALLED_APPS = [
     'leaflet',
     'storages',
 
-    'kebab_app.main',
-    'kebab_app.accounts',
-    'kebab_app.recipes',
+    'main',
+    'accounts',
+    'recipes',
 
 ]
 
@@ -208,7 +208,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    BASE_DIR / 'kebab_app' / 'locale',
+    BASE_DIR / 'locale',
 ]
 
 TIME_ZONE = 'UTC'
