@@ -1,1 +1,1 @@
-python manage.py compilemessages
+cd kebab_app && python manage.py compilemessages
