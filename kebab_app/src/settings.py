@@ -59,9 +59,9 @@ INSTALLED_APPS = [
     'leaflet',
     'storages',
 
-    'main',
-    'accounts',
-    'recipes',
+    'kebab_app.main',
+    'kebab_app.accounts',
+    'kebab_app.recipes',
 
 ]
 
