@@ -52,6 +52,7 @@ coverage.xml
 cover/
 
 # Translations
+#   Refer to the script in extras/languages.py to use these
 *.pot
 
 # Django stuff:
@@ -152,6 +153,9 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+*.Zone.Identifier
+
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

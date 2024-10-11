@@ -1,0 +1,536 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-04 17:16+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: accounts/templates/accounts/user_kebab_spots.html:4
+msgid "Kebab Spots of"
+msgstr "Точки для шашлику -"
+
+#: accounts/templates/accounts/user_kebab_spots.html:5
+msgid "Your recipes"
+msgstr "Ваші рецепти"
+
+#: accounts/templates/accounts/user_kebab_spots.html:9 main/forms.py:31
+msgid "Name"
+msgstr "Назва"
+
+#: accounts/templates/accounts/user_kebab_spots.html:10
+#: accounts/templates/accounts/user_recipes.html:10
+#: main/templates/create_kebab_spot.html:72 main/templates/home.html:156
+#: main/templates/kebab_spot_detail.html:190 main/templates/search.html:142
+#: recipes/templates/recipe_detail.html:58
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: accounts/templates/accounts/user_kebab_spots.html:11
+msgid "Number of comments"
+msgstr "Немає коментарів"
+
+#: accounts/templates/accounts/user_kebab_spots.html:18
+#: accounts/templates/accounts/user_recipes.html:17
+msgid "No rating yet"
+msgstr "Поки що немає рейтингу"
+
+#: accounts/templates/accounts/user_kebab_spots.html:19
+msgid "No comments yet"
+msgstr "Поки що немає коментарів"
+
+#: accounts/templates/accounts/user_kebab_spots.html:23
+msgid "You haven't added any kebab spots yet."
+msgstr "Ви ще не додали жодних точок для шашлику."
+
+#: accounts/templates/accounts/user_recipes.html:4
+msgid "Recipes of"
+msgstr "Рецепти -"
+
+#: accounts/templates/accounts/user_recipes.html:5
+msgid "Your kebab spots"
+msgstr "Ваші точки для шашлику"
+
+#: accounts/templates/accounts/user_recipes.html:9 recipes/forms.py:21
+msgid "Title"
+msgstr "Назва"
+
+#: accounts/templates/accounts/user_recipes.html:21
+msgid "You haven't added any recipes yet."
+msgstr "Ви ще не додали жодного рецепту."
+
+#: main/forms.py:32 main/templates/kebab_spot_detail.html:203
+#: recipes/forms.py:22 recipes/templates/recipe_detail.html:71
+msgid "Description"
+msgstr "Опис"
+
+#: main/forms.py:33 main/templates/kebab_spot_detail.html:211
+msgid "Notes"
+msgstr "Замітки"
+
+#: main/forms.py:34 main/templates/kebab_spot_detail.html:219
+msgid "Paid or free"
+msgstr "Платно"
+
+#: main/forms.py:35 main/forms.py:135 main/templates/kebab_spot_detail.html:220
+msgid "Private property"
+msgstr "Приватна територія"
+
+#: main/forms.py:36 main/forms.py:140 main/templates/kebab_spot_detail.html:221
+msgid "Parking"
+msgstr "Парковка"
+
+#: main/forms.py:37 main/forms.py:145 main/templates/kebab_spot_detail.html:222
+msgid "Toilets"
+msgstr "Туалети"
+
+#: main/forms.py:38 main/forms.py:150 main/templates/kebab_spot_detail.html:223
+msgid "Gazebos"
+msgstr "Альтанки"
+
+#: main/forms.py:39 main/forms.py:155 main/templates/kebab_spot_detail.html:224
+msgid "Tables"
+msgstr "Столи"
+
+#: main/forms.py:40 main/forms.py:160 main/templates/kebab_spot_detail.html:225
+msgid "Camping places"
+msgstr "Місця для кемпінгу"
+
+#: main/forms.py:41 main/forms.py:165 main/templates/kebab_spot_detail.html:226
+msgid "Swimming spot"
+msgstr "Місця для купання"
+
+#: main/forms.py:42 main/forms.py:170 main/templates/kebab_spot_detail.html:227
+msgid "Place for fire"
+msgstr "Місце для багаття"
+
+#: main/forms.py:43 main/forms.py:175 main/templates/kebab_spot_detail.html:228
+msgid "Trash bins"
+msgstr "Смітники"
+
+#: main/forms.py:68 main/forms.py:233
+msgid "Save"
+msgstr "Зберегти"
+
+#: main/forms.py:79
+msgid "You forgot to place a point on the map."
+msgstr "Ви забули вказати точку на карті."
+
+#: main/forms.py:84
+msgid "Invalid point on the map."
+msgstr "Невірна точка на карті."
+
+#: main/forms.py:92
+msgid "You can upload a maximum of 5 photos."
+msgstr "Ви можете завантажити максимум 5 фото."
+
+#: main/forms.py:95 recipes/forms.py:41
+msgid "File is too large. Maximum size: 10 MB."
+msgstr "Файл занадто великий. Максимальний розмір: 10 МБ."
+
+#: main/forms.py:124
+msgid "Radius"
+msgstr "Радіус"
+
+#: main/forms.py:125
+msgid "10 km"
+msgstr "10 км"
+
+#: main/forms.py:125
+msgid "20 km"
+msgstr "20 км"
+
+#: main/forms.py:125
+msgid "30 km"
+msgstr "30 км"
+
+#: main/forms.py:130
+msgid "Paid"
+msgstr "Платно"
+
+#: main/forms.py:211
+msgid "Apply"
+msgstr "Застосувати"
+
+#: main/forms.py:224 recipes/forms.py:14
+#: recipes/templates/recipe_create.html:47
+msgid "Photos"
+msgstr "Фото"
+
+#: main/forms.py:256
+msgid "Reason for complaint"
+msgstr "причина скарги"
+
+#: main/services.py:82
+msgid "Geolocation not provided"
+msgstr "Геолокація не надана"
+
+#: main/services.py:130
+msgid "Unable to find the specified location. Please check the spelling."
+msgstr "Геолокація не знайдена. Перевірте правильність назви."
+
+#: main/services.py:244
+msgid "Comment not found"
+msgstr "Коментар не знайдено"
+
+#: main/services.py:247 recipes/services.py:79
+msgid "Invalid request"
+msgstr "Неправильний запит"
+
+#: main/services.py:292
+msgid ""
+"The spot has been sent for review and hidden due to a large number of "
+"complaints."
+msgstr ""
+"Точка була надіслана на розгляд і прихована з причиною великої кількості "
+"скарг."
+
+#: main/services.py:294
+msgid "Your complaint has been submitted."
+msgstr "Вашу скаргу відправлено"
+
+#: main/services.py:299
+msgid "You have already submitted a complaint for this spot."
+msgstr "Ви вже подавали скаргу на цю точку."
+
+#: main/templates/about.html:4
+msgid "About KebabSpots"
+msgstr "Про KebabSpots"
+
+#: main/templates/about.html:6
+msgid ""
+"KebabSpots is a portfolio project developed to showcase my skills as a "
+"Python Django developer."
+msgstr ""
+"KebabSpots - портфоліо проєкту, що демонструє мої навички як Python Django-"
+"розробника."
+
+#: main/templates/about.html:7
+msgid ""
+"This web-based application allows users to find, rate and share outdoor "
+"barbecue locations."
+msgstr ""
+"Цей веб-додаток дозволяє користувачам знайти та оцінити місця для готування "
+"шашлику під відкритим небом."
+
+#: main/templates/about.html:8
+msgid ""
+"It also features user authentication, geolocation services, and a rating "
+"system."
+msgstr ""
+"Також додаток має автентифікацію користувача, сервіси геолокації та систему "
+"оцінок."
+
+#: main/templates/about.html:10
+msgid "Project Overview"
+msgstr "Проєкт"
+
+#: main/templates/about.html:12
+msgid "- Built with Django and OpenStreetMap integration"
+msgstr "- Створено на Django і інтегровано з OpenStreetMap"
+
+#: main/templates/about.html:13
+msgid "- Utilizes Django Class-Based Views for efficient development"
+msgstr "- Для ефективної розробки використовуються Django Class-Based Views"
+
+#: main/templates/about.html:14
+msgid ""
+"- Features user authentication, geolocation services, and a rating system"
+msgstr ""
+"- Має автентифікацію користувачів, геолокаційні сервіси та систему оцінювання"
+
+#: main/templates/about.html:16
+msgid "Developer Information"
+msgstr "Інформація про розробника"
+
+#: main/templates/about.html:18
+msgid ""
+"This project was created by Volodymyr Oliinyk, a Python Django developer."
+msgstr ""
+"Цейй проєкт було створено Олійником Володимиром, Python Django-розробником."
+
+#: main/templates/about.html:19
+msgid ""
+"I'm passionate about building robust web applications and continuously "
+"improving my skills."
+msgstr ""
+"Я захоплений створенням надійних веб-додатків і постійно вдосконалюю свої "
+"навички."
+
+#: main/templates/about.html:21
+msgid "Contact Information"
+msgstr "Контактна інформація"
+
+#: main/templates/about.html:23
+msgid "LinkedIn"
+msgstr ""
+
+#: main/templates/about.html:26
+msgid "I'm currently seeking new opportunities in Python Django development."
+msgstr "Відкритий до нових можливостей в Python Django."
+
+#: main/templates/about.html:27
+msgid ""
+"If you're interested in collaborating or have any questions about this "
+"project, please don't hesitate to reach out."
+msgstr ""
+"Якщо ви зацікавлені у співпраці або маєте якісь запитання щодо цього "
+"проекту, будь ласка, не соромтеся звертатися!"
+
+#: main/templates/about.html:29
+msgid "Thank you for visiting KebabSpots!"
+msgstr "Дякую, що завітали до KebabSpots!"
+
+#: main/templates/base.html:7 main/templates/base.html:30
+msgid "Kebab Spots"
+msgstr ""
+
+#: main/templates/base.html:31 recipes/templates/recipe_create.html:5
+msgid "Recipes"
+msgstr "Рецепти"
+
+#: main/templates/base.html:44
+msgid "Logout"
+msgstr "Вихід"
+
+#: main/templates/base.html:50
+msgid "Login"
+msgstr "Вхід"
+
+#: main/templates/base.html:81
+msgid "About"
+msgstr ""
+
+#: main/templates/create_kebab_spot.html:5
+msgid "Adding a kebab spot"
+msgstr "Додавання точки для шашлику"
+
+#: main/templates/create_kebab_spot.html:116 main/templates/home.html:195
+msgid "You are here"
+msgstr "Ви тут"
+
+#: main/templates/create_kebab_spot.html:155
+#: main/templates/kebab_spot_detail.html:406
+#: recipes/templates/recipe_create.html:72
+msgid "File"
+msgstr "Фотографії"
+
+#: main/templates/create_kebab_spot.html:155
+#: main/templates/kebab_spot_detail.html:406
+#: recipes/templates/recipe_create.html:72
+msgid "is not an image. Please select only photos."
+msgstr "Файл не є зображенням. Будь ласка, виберіть лише зображення."
+
+#: main/templates/home.html:5
+msgid "Nearest points"
+msgstr "Найближчі точки"
+
+#: main/templates/home.html:102 main/templates/search.html:85
+msgid "Enter the name of the settlement"
+msgstr "Введіть назву населеного пункту"
+
+#: main/templates/home.html:103 main/templates/search.html:4
+#: main/templates/search.html:86 recipes/templates/recipe_detail.html:46
+#: recipes/templates/recipe_search.html:14
+#: recipes/templates/recipes_list.html:17
+msgid "Search"
+msgstr "Пошук"
+
+#: main/templates/home.html:106 main/templates/search.html:88
+msgid "Add kebab spot"
+msgstr "Додати точку для шашлику"
+
+#: main/templates/home.html:111 main/templates/home.html:114
+#: main/templates/search.html:97 main/templates/search.html:100
+msgid "Filters"
+msgstr "Фільтри"
+
+#: main/templates/home.html:156 main/templates/search.html:143
+msgid "No ratings"
+msgstr "Немає рейтингу"
+
+#: main/templates/home.html:211
+msgid "Geolocation error"
+msgstr "Помилка геолокації"
+
+#: main/templates/home.html:220
+msgid "Show my location"
+msgstr "Показати моє місцезнаходження"
+
+#: main/templates/home.html:242
+msgid "Error fetching kebab spots"
+msgstr "Помилка отримання точок для шашлику"
+
+#: main/templates/kebab_spot_detail.html:178
+msgid "Created by"
+msgstr "Створено"
+
+#: main/templates/kebab_spot_detail.html:184
+msgid "Spot photo"
+msgstr "Фото точки"
+
+#: main/templates/kebab_spot_detail.html:195
+#: recipes/templates/recipe_detail.html:63
+msgid "Your rating has been recorded!"
+msgstr "Вашу оцінку враховано!"
+
+#: main/templates/kebab_spot_detail.html:197
+#: recipes/templates/recipe_detail.html:65
+#: recipes/templates/recipe_search.html:32
+#: recipes/templates/recipes_list.html:35
+msgid "Average rating"
+msgstr "Середній рейтинг"
+
+#: main/templates/kebab_spot_detail.html:217
+msgid "Characteristics"
+msgstr "Опис"
+
+#: main/templates/kebab_spot_detail.html:219
+msgid "Paid,Free"
+msgstr "Платно,Безкоштовно"
+
+#: main/templates/kebab_spot_detail.html:220
+#: main/templates/kebab_spot_detail.html:221
+#: main/templates/kebab_spot_detail.html:222
+#: main/templates/kebab_spot_detail.html:223
+#: main/templates/kebab_spot_detail.html:224
+#: main/templates/kebab_spot_detail.html:225
+#: main/templates/kebab_spot_detail.html:226
+#: main/templates/kebab_spot_detail.html:227
+#: main/templates/kebab_spot_detail.html:228
+msgid "Yes,No"
+msgstr "Так,Ні"
+
+#: main/templates/kebab_spot_detail.html:232
+msgid "Submit complaint"
+msgstr "Відправити скаргу"
+
+#: main/templates/kebab_spot_detail.html:235
+msgid "Comments"
+msgstr "Коментарі"
+
+#: main/templates/kebab_spot_detail.html:251
+msgid "Comment photo"
+msgstr "Фото коментаря"
+
+#: main/templates/kebab_spot_detail.html:283
+msgid "Delete"
+msgstr "Видалити"
+
+#: main/templates/kebab_spot_detail.html:292
+msgid "No comments."
+msgstr "Немає коментарів"
+
+#: main/templates/kebab_spot_detail.html:300
+msgid "Leave a comment"
+msgstr "Написати коментар"
+
+#: main/templates/kebab_spot_detail.html:303
+msgid "To leave a comment, please log in."
+msgstr "Щоб написати коментар, будь ласка, увійдіть у систему."
+
+#: main/templates/kebab_spot_detail.html:490
+msgid "An error occurred while voting. Please try again."
+msgstr "Помилка при голосуванні. Будь ласка, спробуйте ще раз."
+
+#: main/templates/submit_complaint.html:4
+msgid "Сomplaint"
+msgstr "Поскаржитись на точку"
+
+#: main/templates/submit_complaint.html:8
+msgid "Submit a complaint"
+msgstr "Скарга"
+
+#: main/templates/submit_complaint.html:12
+msgid "Send complaint"
+msgstr "Відправити скаргу"
+
+#: recipes/forms.py:23 recipes/templates/recipe_detail.html:78
+msgid "Ingredients"
+msgstr "Інгредієнти"
+
+#: recipes/forms.py:34 recipes/templates/recipe_create.html:51
+msgid "Save recipe"
+msgstr "Зберегти рецепт"
+
+#: recipes/templates/recipe_create.html:5
+msgid "Add new recipe"
+msgstr "Додати рецепт"
+
+#: recipes/templates/recipe_detail.html:43
+#: recipes/templates/recipe_search.html:11
+#: recipes/templates/recipes_list.html:14
+msgid "Search recipes"
+msgstr "Зберегти рецепт"
+
+#: recipes/templates/recipe_detail.html:53
+#: recipes/templates/recipe_search.html:29
+#: recipes/templates/recipes_list.html:32
+msgid "Author"
+msgstr "Автор"
+
+#: recipes/templates/recipe_detail.html:54
+msgid "Created at"
+msgstr "Створено"
+
+#: recipes/templates/recipe_detail.html:91
+msgid "Back to recipes list"
+msgstr "Назад до списку рецептів"
+
+#: recipes/templates/recipe_search.html:48
+#: recipes/templates/recipes_list.html:49
+msgid "Previous"
+msgstr "Попередня"
+
+#: recipes/templates/recipe_search.html:53
+#: recipes/templates/recipes_list.html:53
+msgid "Page"
+msgstr "Сторінка"
+
+#: recipes/templates/recipe_search.html:55
+#: recipes/templates/recipes_list.html:53
+msgid "of"
+msgstr "з"
+
+#: recipes/templates/recipe_search.html:61
+#: recipes/templates/recipes_list.html:57
+msgid "Next"
+msgstr "Наступна"
+
+#: recipes/templates/recipe_search.html:70
+msgid "No recipes found."
+msgstr "Не знайдено рецептів"
+
+#: recipes/templates/recipes_list.html:9
+msgid "Create recipe"
+msgstr "Додати рецепт"
+
+#: recipes/templates/recipes_list.html:65
+msgid "No recipes yet"
+msgstr "Рецептів поки що немає"
+
+#: src/settings.py:188
+msgid "English"
+msgstr ""
+
+#: src/settings.py:189
+msgid "Ukrainian"
+msgstr "Українська"
+
+#~ msgid "Register"
+#~ msgstr "Реєстрація"
