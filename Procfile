@@ -1,1 +1,1 @@
-web: gunicorn kebab_app.src.wsgi:application
+web: gunicorn src.wsgi:application
