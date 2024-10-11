@@ -1,1 +1,4 @@
-python manage.py compilemessages
+#!/bin/bash
+set -o errexit  # Вихід, якщо якась команда завершиться з помилкою
+
+python manage.py migrate
