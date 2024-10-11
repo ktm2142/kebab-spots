@@ -1,4 +1,0 @@
-#!/bin/bash
-set -o errexit  # Вихід, якщо якась команда завершиться з помилкою
-
-python manage.py migrate
