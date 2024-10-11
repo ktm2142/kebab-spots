@@ -125,7 +125,6 @@ else:
 # Ensure PostGIS engine
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
-# GDAL and GEOS library paths (for Heroku)
 if 'GDAL_LIBRARY_PATH' in os.environ:
     GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 if 'GEOS_LIBRARY_PATH' in os.environ:
