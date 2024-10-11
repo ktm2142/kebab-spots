@@ -14,6 +14,9 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 from decouple import config
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
 
@@ -57,7 +60,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_bootstrap5',
     'leaflet',
-    'storages',
     'cloudinary',
     'cloudinary_storage',
 
