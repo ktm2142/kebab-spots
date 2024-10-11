@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['kebab-spots-8dc29cafaa4e.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['kebab-spots.onrender.com', '127.0.0.1']
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -97,6 +97,7 @@ TEMPLATES = [
     },
 ]
 
+print(os.getcwd())
 WSGI_APPLICATION = 'src.wsgi.application'
 
 # Database
@@ -104,8 +105,8 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 # Database configuration
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
 if DATABASE_URL:
-    # Heroku environment
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=500, ssl_require=True)
     }

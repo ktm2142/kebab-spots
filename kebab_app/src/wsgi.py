@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 """
 
 import os
+print(f"WSGI is running from directory: {os.getcwd()}")
 
 from django.core.wsgi import get_wsgi_application
 
