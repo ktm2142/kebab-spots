@@ -129,6 +129,7 @@
                 height: 350px;
                 width: 100%;
             }
+
             .container {
                 padding-left: 10px;
                 padding-right: 10px;
@@ -198,8 +199,8 @@
                     id="average-rating">{{ average_rating|default:"0.0"|floatformat:1 }}</span></p>
         </div>
 
+        <h3 class="card-title">{% trans "Description" %}</h3>
         <div class="card mb-3">
-            <h3 class="card-title">{% trans "Description" %}</h3>
             <div class="card-body">
                 <p class="card-text">{{ spot.description }}</p>
             </div>
@@ -240,7 +241,7 @@
                     <div class="comment" id="comment-{{ comment.id }}">
                         <div class="comment-header">
                             <span class="comment-author">{{ comment.user.username }}</span>
-                            <span class="comment-date">{{ comment.created_at|date:"SHORT_DATETIME_FORMAT"}}</span>
+                            <span class="comment-date">{{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}</span>
                         </div>
                         <div class="comment-content">
                             <p>{{ comment.text }}</p>
