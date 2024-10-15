@@ -81,8 +81,8 @@ msgid "Notes"
 msgstr ""
 
 #: main/forms.py:34 main/templates/kebab_spot_detail.html:219
-msgid "Paid or free"
-msgstr "Free or paid"
+msgid "Free of charge"
+msgstr ""
 
 #: main/forms.py:35 main/forms.py:135 main/templates/kebab_spot_detail.html:220
 msgid "Private property"
