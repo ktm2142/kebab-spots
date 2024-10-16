@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-04 17:16+0000\n"
+"POT-Creation-Date: 2024-10-16 04:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr ""
 #: accounts/templates/accounts/user_kebab_spots.html:10
 #: accounts/templates/accounts/user_recipes.html:10
 #: main/templates/create_kebab_spot.html:72 main/templates/home.html:156
-#: main/templates/kebab_spot_detail.html:190 main/templates/search.html:142
+#: main/templates/kebab_spot_detail.html:191 main/templates/search.html:142
 #: recipes/templates/recipe_detail.html:58
 msgid "Rating"
 msgstr ""
@@ -71,52 +71,52 @@ msgstr ""
 msgid "You haven't added any recipes yet."
 msgstr ""
 
-#: main/forms.py:32 main/templates/kebab_spot_detail.html:203
+#: main/forms.py:32 main/templates/kebab_spot_detail.html:202
 #: recipes/forms.py:22 recipes/templates/recipe_detail.html:71
 msgid "Description"
 msgstr ""
 
-#: main/forms.py:33 main/templates/kebab_spot_detail.html:211
+#: main/forms.py:33 main/templates/kebab_spot_detail.html:212
 msgid "Notes"
 msgstr ""
 
-#: main/forms.py:34 main/templates/kebab_spot_detail.html:219
-msgid "For a fee"
-msgstr "For a fee"
+#: main/forms.py:34 main/templates/kebab_spot_detail.html:220
+msgid "Paid or free"
+msgstr ""
 
-#: main/forms.py:35 main/forms.py:135 main/templates/kebab_spot_detail.html:220
+#: main/forms.py:35 main/forms.py:135 main/templates/kebab_spot_detail.html:221
 msgid "Private property"
 msgstr ""
 
-#: main/forms.py:36 main/forms.py:140 main/templates/kebab_spot_detail.html:221
+#: main/forms.py:36 main/forms.py:140 main/templates/kebab_spot_detail.html:222
 msgid "Parking"
 msgstr ""
 
-#: main/forms.py:37 main/forms.py:145 main/templates/kebab_spot_detail.html:222
+#: main/forms.py:37 main/forms.py:145 main/templates/kebab_spot_detail.html:223
 msgid "Toilets"
 msgstr ""
 
-#: main/forms.py:38 main/forms.py:150 main/templates/kebab_spot_detail.html:223
+#: main/forms.py:38 main/forms.py:150 main/templates/kebab_spot_detail.html:224
 msgid "Gazebos"
 msgstr ""
 
-#: main/forms.py:39 main/forms.py:155 main/templates/kebab_spot_detail.html:224
+#: main/forms.py:39 main/forms.py:155 main/templates/kebab_spot_detail.html:225
 msgid "Tables"
 msgstr ""
 
-#: main/forms.py:40 main/forms.py:160 main/templates/kebab_spot_detail.html:225
+#: main/forms.py:40 main/forms.py:160 main/templates/kebab_spot_detail.html:226
 msgid "Camping places"
 msgstr ""
 
-#: main/forms.py:41 main/forms.py:165 main/templates/kebab_spot_detail.html:226
+#: main/forms.py:41 main/forms.py:165 main/templates/kebab_spot_detail.html:227
 msgid "Swimming spot"
 msgstr ""
 
-#: main/forms.py:42 main/forms.py:170 main/templates/kebab_spot_detail.html:227
+#: main/forms.py:42 main/forms.py:170 main/templates/kebab_spot_detail.html:228
 msgid "Place for fire"
 msgstr ""
 
-#: main/forms.py:43 main/forms.py:175 main/templates/kebab_spot_detail.html:228
+#: main/forms.py:43 main/forms.py:175 main/templates/kebab_spot_detail.html:229
 msgid "Trash bins"
 msgstr ""
 
@@ -303,18 +303,18 @@ msgstr ""
 msgid "Adding a kebab spot"
 msgstr ""
 
-#: main/templates/create_kebab_spot.html:116 main/templates/home.html:195
+#: main/templates/create_kebab_spot.html:116 main/templates/home.html:194
 msgid "You are here"
 msgstr ""
 
 #: main/templates/create_kebab_spot.html:155
-#: main/templates/kebab_spot_detail.html:406
+#: main/templates/kebab_spot_detail.html:407
 #: recipes/templates/recipe_create.html:72
 msgid "File"
 msgstr ""
 
 #: main/templates/create_kebab_spot.html:155
-#: main/templates/kebab_spot_detail.html:406
+#: main/templates/kebab_spot_detail.html:407
 #: recipes/templates/recipe_create.html:72
 msgid "is not an image. Please select only photos."
 msgstr ""
@@ -347,47 +347,46 @@ msgstr ""
 msgid "No ratings"
 msgstr ""
 
-#: main/templates/home.html:211
+#: main/templates/home.html:210
 msgid "Geolocation error"
 msgstr ""
 
-#: main/templates/home.html:220
+#: main/templates/home.html:219
 msgid "Show my location"
 msgstr ""
 
-#: main/templates/home.html:242
+#: main/templates/home.html:241
 msgid "Error fetching kebab spots"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:178
+#: main/templates/kebab_spot_detail.html:179
 msgid "Created by"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:184
+#: main/templates/kebab_spot_detail.html:185
 msgid "Spot photo"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:195
+#: main/templates/kebab_spot_detail.html:196
 #: recipes/templates/recipe_detail.html:63
 msgid "Your rating has been recorded!"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:197
+#: main/templates/kebab_spot_detail.html:198
 #: recipes/templates/recipe_detail.html:65
 #: recipes/templates/recipe_search.html:32
 #: recipes/templates/recipes_list.html:35
 msgid "Average rating"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:217
+#: main/templates/kebab_spot_detail.html:218
 msgid "Characteristics"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:219
+#: main/templates/kebab_spot_detail.html:220
 msgid "Paid,Free"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:220
 #: main/templates/kebab_spot_detail.html:221
 #: main/templates/kebab_spot_detail.html:222
 #: main/templates/kebab_spot_detail.html:223
@@ -396,38 +395,39 @@ msgstr ""
 #: main/templates/kebab_spot_detail.html:226
 #: main/templates/kebab_spot_detail.html:227
 #: main/templates/kebab_spot_detail.html:228
+#: main/templates/kebab_spot_detail.html:229
 msgid "Yes,No"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:232
+#: main/templates/kebab_spot_detail.html:233
 msgid "Submit complaint"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:235
+#: main/templates/kebab_spot_detail.html:236
 msgid "Comments"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:251
+#: main/templates/kebab_spot_detail.html:252
 msgid "Comment photo"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:283
+#: main/templates/kebab_spot_detail.html:284
 msgid "Delete"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:292
+#: main/templates/kebab_spot_detail.html:293
 msgid "No comments."
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:300
+#: main/templates/kebab_spot_detail.html:301
 msgid "Leave a comment"
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:303
+#: main/templates/kebab_spot_detail.html:304
 msgid "To leave a comment, please log in."
 msgstr ""
 
-#: main/templates/kebab_spot_detail.html:490
+#: main/templates/kebab_spot_detail.html:491
 msgid "An error occurred while voting. Please try again."
 msgstr ""
 
@@ -507,10 +507,13 @@ msgstr ""
 msgid "No recipes yet"
 msgstr ""
 
-#: src/settings.py:188
+#: src/settings.py:205
 msgid "English"
 msgstr ""
 
-#: src/settings.py:189
+#: src/settings.py:206
 msgid "Ukrainian"
 msgstr ""
+
+#~ msgid "For a fee"
+#~ msgstr "For a fee"

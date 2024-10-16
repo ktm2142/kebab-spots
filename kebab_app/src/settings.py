@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['kebab-spots-8dc29cafaa4e.herokuapp.com', '127.0.0.1']
 
@@ -143,9 +143,11 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 
 
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if DEBUG:
     STATIC_URL = '/static/'
+else:
+    STATIC_URL = '/static/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Password validation
@@ -184,6 +186,7 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = 'main:home'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 SOCIALACCOUNT_PROVIDERS = {

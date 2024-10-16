@@ -10,11 +10,9 @@ from recipes.models import Recipe
 
 
 class CustomLoginView(LoginView):
-
     def get(self, request, *args, **kwargs):
-        if 'google' in request.GET:
-            return redirect(reverse('google_login'))
-        return super().get(request, *args, **kwargs)
+        return redirect(reverse('google_login'))
+
 
 class CustomLogoutView(LogoutView):
     next_page = settings.LOGOUT_REDIRECT_URL
