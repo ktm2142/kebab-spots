@@ -31,7 +31,7 @@ class KebabSpotForm(forms.ModelForm):
             'name': _('Name'),
             'description': _('Description'),
             'notes': _('Notes'),
-            'payed_or_free': _('Paid or free'),
+            'payed_or_free': _('Paid'),
             'private_property': _('Private property'),
             'parking': _('Parking'),
             'toilets': _('Toilets'),

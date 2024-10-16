@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-16 04:07+0000\n"
+"POT-Creation-Date: 2024-10-16 04:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,8 +80,8 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: main/forms.py:34 main/templates/kebab_spot_detail.html:220
-msgid "Paid or free"
+#: main/forms.py:34 main/forms.py:130
+msgid "Paid"
 msgstr ""
 
 #: main/forms.py:35 main/forms.py:135 main/templates/kebab_spot_detail.html:221
@@ -154,10 +154,6 @@ msgstr ""
 
 #: main/forms.py:125
 msgid "30 km"
-msgstr ""
-
-#: main/forms.py:130
-msgid "Paid"
 msgstr ""
 
 #: main/forms.py:211
@@ -384,6 +380,10 @@ msgid "Characteristics"
 msgstr ""
 
 #: main/templates/kebab_spot_detail.html:220
+msgid "Paid or free"
+msgstr ""
+
+#: main/templates/kebab_spot_detail.html:220
 msgid "Paid,Free"
 msgstr ""
 
@@ -507,11 +507,11 @@ msgstr ""
 msgid "No recipes yet"
 msgstr ""
 
-#: src/settings.py:205
+#: src/settings.py:208
 msgid "English"
 msgstr ""
 
-#: src/settings.py:206
+#: src/settings.py:209
 msgid "Ukrainian"
 msgstr ""
 
